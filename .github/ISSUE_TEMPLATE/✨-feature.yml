@@ -1,43 +1,35 @@
 name: "Feat Request"
 description: "기능 추가 또는 개선"
 title: "[Feat] "
-labels: ''
-assignees: ''
+labels: ["feature", "enhancement"]
+assignees: ["user1", "user2"]
 
 body:
-  - type: markdown
+  - type: input
+    id: "feature_type"
     attributes:
-      value: |
-        # ✨ Feat
+      label: "🛠 종류"
+      placeholder: "작업의 종류를 간략히 설명해 주세요. 예) feat, fix, chore 등"
 
-        ## 🛠 종류
-        작업의 종류를 간략히 설명해 주세요. 예) feat, fix, chore 등
-
-        ---
-
-  - type: markdown
+  - type: textarea
+    id: "feature_description"
     attributes:
-      value: |
-        ## 📄 설명 (필수)
-        기능 또는 개선 사항에 대해 자세히 작성해 주세요.  
+      label: "📄 설명 (필수)"
+      placeholder: |
+        기능 또는 개선 사항에 대해 자세히 작성해 주세요.
         예: 유저 목록 조회를 위한 API 구현
 
-        ---
-
-  - type: markdown
+  - type: checkboxes
+    id: "to_do"
     attributes:
-      value: |
-        ## ✅ To do
-        필요한 작업 항목을 체크박스 형태로 작성해 주세요.  
-        예:
-        - [ ] 엔티티 생성
-        - [ ] API 작성
+      label: "✅ To do"
+      description: "필요한 작업 항목을 체크박스 형태로 작성해 주세요."
+      options:
+        - label: "엔티티 생성"
+        - label: "API 작성"
 
-        ---
-
-  - type: markdown
+  - type: input
+    id: "reference_links"
     attributes:
-      value: |
-        ## 🔗 참고 자료
-        관련 문서나 링크가 있다면 작성해 주세요.  
-        예: [API 문서 링크](https://example.com)
+      label: "🔗 참고 자료"
+      placeholder: "관련 문서나 링크가 있다면 작성해 주세요. 
