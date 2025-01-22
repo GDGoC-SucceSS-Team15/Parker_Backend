@@ -1,0 +1,37 @@
+name: "Pull Request"
+description: "PR 템플릿"
+title: "[#<PR 번호> <TYPE>] <제목>"
+
+body:
+  - type: input
+    id: "pr_title"
+    attributes:
+      label: "📝 제목"
+      placeholder: "PR 제목: [#<PR 번호> FEAT] 변경 사항 예: [#123 FEAT] 회원가입 API 구현"
+
+  - type: input
+    id: "related_issues"
+    attributes:
+      label: "🔗 관련 이슈"
+      placeholder: "관련 이슈 번호를 작성하세요. 예: #45"
+
+  - type: textarea
+    id: "work_done"
+    attributes:
+      label: "📋 작업 내용"
+      placeholder: |
+        PR에서 작업한 내용을 간략히 설명해 주세요.
+        예:
+        - 회원가입 API 구현
+        - 이메일 중복 검사 로직 추가
+        - 유닛 테스트 작성
+
+  - type: checkboxes
+    id: "labels_and_reviewers"
+    attributes:
+      label: "🏷️ 라벨 및 리뷰어"
+      description: "라벨과 리뷰어를 지정해 주세요."
+      options:
+        - label: "**담당자 라벨**: 세은, 지원, 승은, 이나 중 선택"
+        - label: "**분류 라벨**: Feature, BugFix 등"
+        - label: "**리뷰어**: @리뷰어1, @리뷰어2"
