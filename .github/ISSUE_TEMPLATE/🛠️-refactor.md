@@ -1,35 +1,31 @@
-# 🛠️ Refactor
+name: "Refactor Request"
+description: "리팩토링"
+title: "[Refactor] "
 
-## 🛠 대상
-리팩토링할 대상 영역을 간략히 작성해 주세요.  
-예) **UserRepository**, **Service 계층**
+body:
+  - type: input
+    id: "refactor_target"
+    attributes:
+      label: "🛠 대상"
+      placeholder: "리팩토링할 대상 영역을 간략히 작성해 주세요."
 
----
+  - type: textarea
+    id: "refactor_description"
+    attributes:
+      label: "📄 설명"
+      placeholder: |
+        리팩토링 작업의 목적과 이유를 자세히 작성해 주세요.
 
-## 📄 설명
-리팩토링 작업의 목적과 이유를 자세히 작성해 주세요.  
-예) 중복 코드 제거 및 유지보수성 향상을 위해 데이터베이스 접근 로직을 개선합니다.
+  - type: textarea
+    id: "expected_effect"
+    attributes:
+      label: "✅ 기대 효과"
+      placeholder: |
+        리팩토링 후 기대되는 효과를 작성해 주세요.
 
----
 
-## ✅ To do
-필요한 작업 항목을 체크박스 형태로 작성해 주세요.  
-예)
-- [ ] 중복 코드 확인 및 제거
-- [ ] 서비스 계층 로직 분리
-- [ ] 코드 테스트 및 검증
-
----
-
-## ✅ 기대 효과
-리팩토링 후 기대되는 효과를 작성해 주세요.  
-예)
-- [ ] 코드 가독성 향상
-- [ ] 성능 최적화
-- [ ] 유지보수 용이성 증가
-
----
-
-## 🔗 참고 자료
-관련 문서나 링크가 있다면 작성해 주세요.  
-예: [리팩토링 가이드](https://example.com/refactoring-guide)
+  - type: input
+    id: "reference_links"
+    attributes:
+      label: "🔗 참고 자료"
+      placeholder: "관련 문서나 링크가 있다면 작성해 주세요. 예) [리팩토링 가이드](https://example.com/refactoring-guide)"
