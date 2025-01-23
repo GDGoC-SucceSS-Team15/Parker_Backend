@@ -1,6 +1,8 @@
-package com.si9nal.parker.report.domain;
+package com.si9nal.parker.parkingvioation.domain;
 
+import com.si9nal.parker.global.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +15,8 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-public class ParkingViolation {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ParkingViolation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,11 +37,7 @@ public class ParkingViolation {
     private LocalTime weekdayEndTime;
     private LocalTime saturdayStartTime;
     private LocalTime saturdayEndTime;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private LocalTime holidayStartTime;
+    private LocalTime holidayEndTime;
 
 }
