@@ -44,4 +44,10 @@ public class UserController {
         userService.logout(principal, request);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/deleteUser")
+    public ResponseEntity<Void> deleteUser(Principal principal, HttpServletRequest request) {
+        userService.deleteUser(principal, request);
+        return ResponseEntity.ok().build();
+    }
 }

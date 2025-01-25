@@ -75,4 +75,21 @@ public class UserService {
         long expirationTime = tokenProvider.getTokenExpiration(token);
         redisTemplate.opsForValue().set(token, "blacklisted", Duration.ofMillis(expirationTime));
     }
+
+    @Transactional
+    public void deleteUser(Principal principal, HttpServletRequest request) {
+        if (principal == null) {
+            throw new IllegalStateException("인증된 사용자가 존재하지 않습니다.");
+        }
+
+        String email = principal.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
+        String token = tokenProvider.resolveToken(request);
+        redisTemplate.delete(token);
+
+        userRepository.delete(user);
+    }
 }
