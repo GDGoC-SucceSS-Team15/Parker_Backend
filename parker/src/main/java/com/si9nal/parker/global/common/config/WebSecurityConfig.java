@@ -23,7 +23,7 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/user/signup").permitAll()
+                        .requestMatchers("/api/user/signup", "/api/user/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

@@ -1,9 +1,12 @@
 package com.si9nal.parker.user.controller;
 
+import com.si9nal.parker.user.dto.req.UserLoginReqDto;
 import com.si9nal.parker.user.dto.req.UserSignupReqDto;
+import com.si9nal.parker.user.dto.res.TokenDto;
 import com.si9nal.parker.user.dto.res.UserInfoResDto;
 import com.si9nal.parker.user.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,5 +27,13 @@ public class UserController {
     public ResponseEntity<UserInfoResDto> SignUp(@RequestBody UserSignupReqDto request) {
         UserInfoResDto savedUser = userService.SingUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenDto> Login(@RequestBody UserLoginReqDto request) {
+        TokenDto tokenDto = userService.Login(request);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(tokenDto);
     }
 }
