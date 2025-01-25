@@ -2,7 +2,7 @@ package com.si9nal.parker.bookmark.domain;
 
 import com.si9nal.parker.global.common.BaseEntity;
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
-import com.si9nal.parker.user.User;
+import com.si9nal.parker.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
