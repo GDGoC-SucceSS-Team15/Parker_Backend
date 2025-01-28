@@ -1,17 +1,16 @@
-package com.si9nal.parker.user;
+package com.si9nal.parker.user.domain;
 
 import com.si9nal.parker.global.common.BaseEntity;
-import com.si9nal.parker.user.enums.Status;
+import com.si9nal.parker.user.domain.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
     @Id
