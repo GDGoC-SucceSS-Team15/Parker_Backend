@@ -5,10 +5,8 @@ import com.si9nal.parker.parkingspace.domain.enums.FeeType;
 import com.si9nal.parker.parkingspace.domain.enums.ParkingType;
 import com.si9nal.parker.parkingspace.domain.enums.ParkingUsage;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -16,6 +14,7 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ParkingSpace extends BaseEntity {
     @Id
@@ -47,11 +46,12 @@ public class ParkingSpace extends BaseEntity {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false, precision = 9, scale = 6)
-    private BigDecimal latitude;
+    private Double latitude;
 
-    @Column(nullable = false, precision = 9, scale = 6)
-    private BigDecimal longitude;
+    private Double longitude;
+
+    @Column(columnDefinition = "geometry(Point, 4326)")
+    private Point point;
 
     @Column(length = 15)
     private String phoneNumber;
@@ -65,5 +65,12 @@ public class ParkingSpace extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ParkingUsage parkingUsage;
 
+    // Utility method to set Point from latitude and longitude
+    public void setPoint(Double latitude, Double longitude) throws Exception {
+        this.point = latitude != null && longitude != null ?
+                (Point) new org.locationtech.jts.io.WKTReader()
+                .read(String.format("POINT(%f %f)", longitude, latitude))
+                : null;
+    }
 
 }
