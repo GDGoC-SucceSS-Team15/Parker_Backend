@@ -1,6 +1,7 @@
 package com.si9nal.parker.parkingspace.dto.res;
 
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
+import lombok.AccessLevel;
 import org.locationtech.jts.geom.Point;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,43 +10,37 @@ import lombok.Getter;
 import java.time.LocalTime;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
 public class ParkingSpaceMapDto {
-    private Long id;
-    private String parkingName;
-    private String address;
-    private Double latitude;
-    private Double longitude;
+    private final Long id;
+    private final String parkingName;
+    private final String address;
+    private final Double latitude;
+    private final Double longitude;
+    private final LocalTime weekdayStartTime;
+    private final LocalTime weekdayEndTime;
+    private final LocalTime saturdayStartTime;
+    private final LocalTime saturdayEndTime;
+    private final LocalTime holidayStartTime;
+    private final LocalTime holidayEndTime;
+    private final Integer baseParkingTime;
+    private final Integer baseParkingFee;
 
-    private Point point;
-
-    private LocalTime weekdayStartTime;
-    private LocalTime weekdayEndTime;
-    private LocalTime saturdayStartTime;
-    private LocalTime saturdayEndTime;
-    private LocalTime holidayStartTime;
-    private LocalTime holidayEndTime;
-
-    private Integer baseParkingTime;
-    private Integer baseParkingFee;
-
-    public static ParkingSpaceMapDto fromEntity(ParkingSpace parkingSpace) {
+    public static ParkingSpaceMapDto fromEntity(ParkingSpace entity) {
         return ParkingSpaceMapDto.builder()
-                .id(parkingSpace.getId())
-                .parkingName(parkingSpace.getParkingName())
-                .address(parkingSpace.getAddress())
-                .latitude(parkingSpace.getLatitude())
-                .longitude(parkingSpace.getLongitude())
-                .point(parkingSpace.getPoint())
-                .weekdayStartTime(parkingSpace.getWeekdayStartTime())
-                .weekdayEndTime(parkingSpace.getWeekdayEndTime())
-                .saturdayStartTime(parkingSpace.getSaturdayStartTime())
-                .saturdayEndTime(parkingSpace.getSaturdayEndTime())
-                .holidayStartTime(parkingSpace.getHolidayStartTime())
-                .holidayEndTime(parkingSpace.getHolidayEndTime())
-                .baseParkingTime(parkingSpace.getBaseParkingTime())
-                .baseParkingFee(parkingSpace.getBaseParkingFee())
+                .id(entity.getId())
+                .parkingName(entity.getParkingName())
+                .address(entity.getAddress())
+                .latitude(entity.getLatitude())
+                .longitude(entity.getLongitude())
+                .weekdayStartTime(entity.getWeekdayStartTime())
+                .weekdayEndTime(entity.getWeekdayEndTime())
+                .saturdayStartTime(entity.getSaturdayStartTime())
+                .saturdayEndTime(entity.getSaturdayEndTime())
+                .holidayStartTime(entity.getHolidayStartTime())
+                .holidayEndTime(entity.getHolidayEndTime())
+                .baseParkingTime(entity.getBaseParkingTime())
+                .baseParkingFee(entity.getBaseParkingFee())
                 .build();
     }
 }

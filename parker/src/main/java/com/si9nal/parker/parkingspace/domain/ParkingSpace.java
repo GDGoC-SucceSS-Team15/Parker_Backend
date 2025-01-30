@@ -13,9 +13,8 @@ import java.time.LocalTime;
 
 @Entity
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "parking_space")
 public class ParkingSpace extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +41,6 @@ public class ParkingSpace extends BaseEntity {
 
     private String managingAgency;
 
-
     @Column(nullable = false)
     private String address;
 
@@ -50,8 +48,9 @@ public class ParkingSpace extends BaseEntity {
 
     private Double longitude;
 
-    @Column(columnDefinition = "geometry(Point, 4326)")
+    @Column(columnDefinition = "POINT SRID 4326", nullable = false)
     private Point point;
+
 
     @Column(length = 15)
     private String phoneNumber;
@@ -65,12 +64,54 @@ public class ParkingSpace extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ParkingUsage parkingUsage;
 
-    // Utility method to set Point from latitude and longitude
-    public void setPoint(Double latitude, Double longitude) throws Exception {
-        this.point = latitude != null && longitude != null ?
-                (Point) new org.locationtech.jts.io.WKTReader()
-                .read(String.format("POINT(%f %f)", longitude, latitude))
-                : null;
+    @Builder
+    public ParkingSpace(String parkingName, String operatingDays, LocalTime weekdayStartTime,
+                        LocalTime weekdayEndTime, LocalTime saturdayStartTime, LocalTime saturdayEndTime,
+                        LocalTime holidayStartTime, LocalTime holidayEndTime, Integer baseParkingTime,
+                        Integer baseParkingFee, Integer additionalUnitTime, Integer additionalUnitFee,
+                        Integer totalParkingSpaces, String managingAgency, String address, Double latitude,
+                        Double longitude, String phoneNumber, ParkingType parkingType, FeeType feeType,
+                        ParkingUsage parkingUsage) {
+        this.parkingName = parkingName;
+        this.operatingDays = operatingDays;
+        this.weekdayStartTime = weekdayStartTime;
+        this.weekdayEndTime = weekdayEndTime;
+        this.saturdayStartTime = saturdayStartTime;
+        this.saturdayEndTime = saturdayEndTime;
+        this.holidayStartTime = holidayStartTime;
+        this.holidayEndTime = holidayEndTime;
+        this.baseParkingTime = baseParkingTime;
+        this.baseParkingFee = baseParkingFee;
+        this.additionalUnitTime = additionalUnitTime;
+        this.additionalUnitFee = additionalUnitFee;
+        this.totalParkingSpaces = totalParkingSpaces;
+        this.managingAgency = managingAgency;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.phoneNumber = phoneNumber;
+        this.parkingType = parkingType;
+        this.feeType = feeType;
+        this.parkingUsage = parkingUsage;
+
+        try {
+            updateLocation(latitude, longitude);
+        } catch (Exception e) {
+            // 로깅 추가 고려
+            this.point = null;
+        }
     }
 
+    public void updateLocation(Double latitude, Double longitude) throws Exception {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        if (latitude != null && longitude != null) {
+            Point newPoint = (Point) new org.locationtech.jts.io.WKTReader()
+                    .read(String.format("POINT(%f %f)", latitude, longitude));
+            newPoint.setSRID(4326);
+            this.point = newPoint;
+        } else {
+            this.point = null;
+        }
+    }
 }
