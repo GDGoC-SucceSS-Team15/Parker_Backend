@@ -1,33 +1,26 @@
 package com.si9nal.parker.parkingvioation.service;
 
-import com.si9nal.parker.parkingvioation.domain.ParkingViolation;
 import com.si9nal.parker.parkingvioation.dto.res.ParkingViolationDetailResponseDto;
-import com.si9nal.parker.parkingvioation.repository.ParkingViolationRepository;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ParkingViolationDetailService {
 
-    private final ParkingViolationRepository parkingViolationRepository;
     private final String filePath = "csv/parkingviolation/전국주정차금지_지정_구역표준데이터_UTF8.csv";
 
-    public ParkingViolationDetailService(ParkingViolationRepository parkingViolationRepository) {
-        this.parkingViolationRepository = parkingViolationRepository;
-    }
+    public List<ParkingViolationDetailResponseDto> getAllParkingViolationDetails() {
+        List<ParkingViolationDetailResponseDto> parkingViolationList = new ArrayList<>();
 
-    @Transactional
-    public void loadAndSaveParkingViolationDetail() {
         try {
             Resource resource = new ClassPathResource(filePath);
             try (InputStream inputStream = resource.getInputStream();
@@ -38,8 +31,6 @@ public class ParkingViolationDetailService {
                         .withIgnoreEmptyLines()
                         .parse(in);
 
-                List<ParkingViolation> parkingViolations = new ArrayList<>();
-
                 for (CSVRecord record : records) {
                     String sidoName = cleanHeader(record.get(0));  // 시도명
                     String sigunguName = cleanHeader(record.get(1));  // 시군구명
@@ -47,61 +38,47 @@ public class ParkingViolationDetailService {
                     String detailedLocation = cleanHeader(record.get(4));  // 상세위치
                     String managementPhoneNumber = cleanHeader(record.get(24));  // 관리기관전화번호
 
-                    LocalTime weekdayStartTime = parseTime(cleanHeader(record.get(8)));  // 평일 시작 시간
-                    LocalTime weekdayEndTime = parseTime(cleanHeader(record.get(9)));  // 평일 종료 시간
-                    LocalTime saturdayStartTime = parseTime(cleanHeader(record.get(12)));  // 토요일 시작 시간
-                    LocalTime saturdayEndTime = parseTime(cleanHeader(record.get(13)));  // 토요일 종료 시간
-                    LocalTime holidayStartTime = parseTime(cleanHeader(record.get(16)));  // 공휴일 시작 시간
-                    LocalTime holidayEndTime = parseTime(cleanHeader(record.get(17)));  // 공휴일 종료 시간
+                    String weekdayTime = formatTimeRange(cleanHeader(record.get(8)), cleanHeader(record.get(9)));  // 평일 단속 시간
+                    String saturdayTime = formatTimeRange(cleanHeader(record.get(12)), cleanHeader(record.get(13)));  // 토요일 단속 시간
+                    String holidayTime = formatTimeRange(cleanHeader(record.get(16)), cleanHeader(record.get(17)));  // 공휴일 단속 시간
 
-                    ParkingViolation parkingViolation = ParkingViolation.builder()
+                    ParkingViolationDetailResponseDto parkingViolation = ParkingViolationDetailResponseDto.builder()
                             .sidoName(sidoName)
                             .sigunguName(sigunguName)
                             .roadName(roadName)
                             .detailedLocation(detailedLocation)
                             .managementPhoneNumber(managementPhoneNumber)
-                            .weekdayStartTime(weekdayStartTime)
-                            .weekdayEndTime(weekdayEndTime)
-                            .saturdayStartTime(saturdayStartTime)
-                            .saturdayEndTime(saturdayEndTime)
-                            .holidayStartTime(holidayStartTime)
-                            .holidayEndTime(holidayEndTime)
+                            .weekdayTime(weekdayTime)
+                            .saturdayTime(saturdayTime)
+                            .holidayTime(holidayTime)
                             .build();
 
-                    parkingViolations.add(parkingViolation);
+                    parkingViolationList.add(parkingViolation);
                 }
-
-                parkingViolationRepository.saveAll(parkingViolations);
-                System.out.println("CSV 데이터가 성공적으로 저장되었습니다!");
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             System.err.println("CSV 데이터 로드 중 오류 발생!");
         }
+
+        return parkingViolationList;
     }
 
-    private LocalTime parseTime(String timeString) {
-        if (timeString == null || timeString.isBlank()) {
-            return null;
+    private String formatTimeRange(String startTime, String endTime) {
+        if (startTime == null || startTime.isBlank() || endTime == null || endTime.isBlank()) {
+            return "단속 없음";
         }
         try {
-            return LocalTime.parse(timeString);
+            LocalTime start = LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime end = LocalTime.parse(endTime, DateTimeFormatter.ofPattern("HH:mm"));
+            return start.format(DateTimeFormatter.ofPattern("HH:mm")) + " ~ " + end.format(DateTimeFormatter.ofPattern("HH:mm"));
         } catch (Exception e) {
-            System.err.println("LocalTime 변환 오류: " + timeString);
-            return null;
+            return "단속 없음";
         }
     }
 
     private String cleanHeader(String value) {
         if (value == null) return null;
         return value.replace("\uFEFF", "").trim();
-    }
-
-    public List<ParkingViolationDetailResponseDto> getAllParkingViolationDetails() {
-        List<ParkingViolation> parkingViolations = parkingViolationRepository.findAll();
-
-        return parkingViolations.stream()
-                .map(ParkingViolationDetailResponseDto::fromEntity)
-                .collect(Collectors.toList());
     }
 }
