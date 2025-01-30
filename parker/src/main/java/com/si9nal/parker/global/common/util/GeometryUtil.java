@@ -16,6 +16,8 @@ public class GeometryUtil {
         Double longitude = radianLongitude + Math.atan2(Math.sin(radianAngle) * Math.sin(distanceRadius)
                 * Math.cos(radianLatitude), Math.cos(distanceRadius) - Math.sin(radianLatitude) * Math.sin(latitude));
 
+        longitude = normalizeLongitude(longitude);
+
         return new Location(toDegree(latitude), toDegree(longitude));
     }
 
@@ -27,10 +29,7 @@ public class GeometryUtil {
         return coordinate * 180.0 / Math.PI;
     }
 
-    @Getter
-    @AllArgsConstructor
-    public static class Location {
-        private Double latitude;
-        private Double longitude;
+    private static Double normalizeLongitude(Double longitude) {
+        return (longitude + 540) % 360 - 180;
     }
 }
