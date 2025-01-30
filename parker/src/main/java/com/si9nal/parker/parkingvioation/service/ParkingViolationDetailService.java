@@ -81,4 +81,15 @@ public class ParkingViolationDetailService {
         if (value == null) return null;
         return value.replace("\uFEFF", "").trim();
     }
+
+    public ParkingViolationDetailResponseDto getParkingViolationDetailByDetailedLocation(String detailedLocation) {
+        List<ParkingViolationDetailResponseDto> parkingViolationList = getAllParkingViolationDetails();
+
+        for (ParkingViolationDetailResponseDto response : parkingViolationList) {
+            if (response.getDetailedLocation().equals(detailedLocation)) {
+                return response;
+            }
+        }
+        return null;
+    }
 }

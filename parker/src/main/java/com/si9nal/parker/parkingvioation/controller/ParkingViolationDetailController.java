@@ -4,6 +4,7 @@ import com.si9nal.parker.parkingvioation.dto.res.ParkingViolationDetailResponseD
 import com.si9nal.parker.parkingvioation.service.ParkingViolationDetailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -27,5 +28,11 @@ public class ParkingViolationDetailController {
         }
 
         return ResponseEntity.ok(allParkingViolations);
+    }
+
+    @GetMapping("/{detailedLocation}")
+    public ResponseEntity<ParkingViolationDetailResponseDto> getParkingViolationDetail(@PathVariable String detailedLocation) {
+        ParkingViolationDetailResponseDto reponse= parkingViolationDetailService.getParkingViolationDetailByDetailedLocation(detailedLocation);
+        return ResponseEntity.ok(reponse);
     }
 }
