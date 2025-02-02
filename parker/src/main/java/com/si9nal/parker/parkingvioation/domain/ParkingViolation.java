@@ -28,6 +28,8 @@ public class ParkingViolation extends BaseEntity {
     private String sigunguName;
 
     private String roadName;
+
+    @Column(length = 500)
     private String detailedLocation;
 
     @Column(length = 15)
