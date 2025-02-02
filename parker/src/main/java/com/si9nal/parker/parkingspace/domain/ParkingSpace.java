@@ -9,8 +9,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.locationtech.jts.geom.Point;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 
 @Entity
@@ -47,11 +47,12 @@ public class ParkingSpace extends BaseEntity {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false, precision = 9, scale = 6)
-    private BigDecimal latitude;
+    private Double latitude;
 
-    @Column(nullable = false, precision = 9, scale = 6)
-    private BigDecimal longitude;
+    private Double longitude;
+
+    @Column(nullable = false, columnDefinition = "POINT SRID 4326")
+    private Point location;
 
     @Column(length = 15)
     private String phoneNumber;
@@ -64,6 +65,5 @@ public class ParkingSpace extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ParkingUsage parkingUsage;
-
 
 }
