@@ -5,6 +5,8 @@ import com.si9nal.parker.parkingspace.dto.res.ParkingSpaceMapDto;
 import com.si9nal.parker.parkingspace.service.ParkingSpaceService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/parkingSpace")
 public class ParkingSpaceController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ParkingSpaceService.class);
     private final ParkingSpaceService service;
 
     public ParkingSpaceController(ParkingSpaceService service) {
@@ -37,7 +40,11 @@ public class ParkingSpaceController {
                     .toList();
 
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(parkingSpaceDtos);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid input parameters: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Collections.emptyList());
         } catch (Exception e) {
+            logger.error("Error fetching parking spaces", e);
             return ResponseEntity.status(500).body(Collections.emptyList());
         }
     }
