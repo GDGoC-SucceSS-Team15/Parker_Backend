@@ -19,12 +19,23 @@ public class MapMainController {
 
     private final MapMainService mapMainService;
 
-    @GetMapping("/map-main")
-    public ResponseEntity<Map<String, Object>> getMapMain(
+    @GetMapping("/v1/map-main")
+    public ResponseEntity<Map<String, Object>> getMapWithParkingSpacesAndCameraLocation(
             @RequestParam Double latitude,
             @RequestParam Double longitude){
 
         Map<String, Object> nearbyData = mapMainService.findNearbyParkingSpacesAndCameras(latitude, longitude);
+
+        return ResponseEntity.ok(nearbyData);
+    }
+
+    @GetMapping("/v2/map-main")
+    public ResponseEntity<Map<String, Object>> getMapWithParkingSpacesAndNoStoppingZones(
+            @RequestParam Double latitude,
+            @RequestParam Double longitude,
+            @RequestParam String sigunguName){
+
+        Map<String, Object> nearbyData = mapMainService.findNearbyParkingSpacesAndNoStoppingZones(latitude, longitude, sigunguName);
 
         return ResponseEntity.ok(nearbyData);
     }

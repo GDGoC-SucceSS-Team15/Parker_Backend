@@ -35,6 +35,10 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Hibernate Spatial 버전 변경 (6.x 사용)
+	implementation 'org.hibernate:hibernate-spatial:6.2.2.Final'
+	implementation 'org.locationtech.jts:jts-core:1.18.2' // JTS
 }
 
 tasks.named('test') {
