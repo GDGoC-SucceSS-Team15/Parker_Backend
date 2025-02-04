@@ -17,4 +17,10 @@ public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Long
     List<ParkingSpace> findParkingSpacesWithinBounds(
             @Param("minLat") Double minLat, @Param("maxLat") Double maxLat,
             @Param("minLon") Double minLon, @Param("maxLon") Double maxLon);
+
+    @Query(value = "SELECT * FROM parking_space " +
+            "WHERE MBRContains(ST_LineStringFromText(?1, 4326), point)",
+            nativeQuery = true)
+    List<ParkingSpace> findWithinRectangle(String lineStringWkt);
 }
+

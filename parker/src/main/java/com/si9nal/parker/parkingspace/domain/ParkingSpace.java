@@ -5,18 +5,17 @@ import com.si9nal.parker.parkingspace.domain.enums.FeeType;
 import com.si9nal.parker.parkingspace.domain.enums.ParkingType;
 import com.si9nal.parker.parkingspace.domain.enums.ParkingUsage;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
+
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "parking_space")
 public class ParkingSpace extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,16 +42,17 @@ public class ParkingSpace extends BaseEntity {
 
     private String managingAgency;
 
-
     @Column(nullable = false)
     private String address;
 
     private Double latitude;
 
+
     private Double longitude;
 
     @Column(nullable = true, columnDefinition = "POINT SRID 4326")
     private Point point;
+
 
     @Column(length = 15)
     private String phoneNumber;
@@ -65,5 +65,52 @@ public class ParkingSpace extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ParkingUsage parkingUsage;
+
+
+    @Builder
+    public ParkingSpace(String parkingName, String operatingDays, LocalTime weekdayStartTime,
+                        LocalTime weekdayEndTime, LocalTime saturdayStartTime, LocalTime saturdayEndTime,
+                        LocalTime holidayStartTime, LocalTime holidayEndTime, Integer baseParkingTime,
+                        Integer baseParkingFee, Integer additionalUnitTime, Integer additionalUnitFee,
+                        Integer totalParkingSpaces, String managingAgency, String address, Double latitude,
+                        Double longitude, String phoneNumber, ParkingType parkingType, FeeType feeType,
+                        ParkingUsage parkingUsage) {
+        this.parkingName = parkingName;
+        this.operatingDays = operatingDays;
+        this.weekdayStartTime = weekdayStartTime;
+        this.weekdayEndTime = weekdayEndTime;
+        this.saturdayStartTime = saturdayStartTime;
+        this.saturdayEndTime = saturdayEndTime;
+        this.holidayStartTime = holidayStartTime;
+        this.holidayEndTime = holidayEndTime;
+        this.baseParkingTime = baseParkingTime;
+        this.baseParkingFee = baseParkingFee;
+        this.additionalUnitTime = additionalUnitTime;
+        this.additionalUnitFee = additionalUnitFee;
+        this.totalParkingSpaces = totalParkingSpaces;
+        this.managingAgency = managingAgency;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.phoneNumber = phoneNumber;
+        this.parkingType = parkingType;
+        this.feeType = feeType;
+        this.parkingUsage = parkingUsage;
+
+      
+    }
+
+    public void updateLocation(Double latitude, Double longitude) throws Exception {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        if (latitude != null && longitude != null) {
+            Point newPoint = (Point) new org.locationtech.jts.io.WKTReader()
+                    .read(String.format("POINT(%f %f)", latitude, longitude));
+            newPoint.setSRID(4326);
+            this.point = newPoint;
+        } else {
+            this.point = null;
+        }
+    }
 
 }
