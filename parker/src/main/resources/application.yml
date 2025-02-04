@@ -23,5 +23,14 @@ jwt:
   secret: ${JWT_SECRET}
   access-token-validity-in-milliseconds: ${ACCESS_TOKEN_VALIDITY_IN_MILLISECONDS}
 
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+    enabled: true
+
+  api-docs:
+    enabled: true
+
 server:
   port: 8080
