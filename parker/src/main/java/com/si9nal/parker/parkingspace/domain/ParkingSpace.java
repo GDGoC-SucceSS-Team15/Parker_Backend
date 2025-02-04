@@ -5,10 +5,11 @@ import com.si9nal.parker.parkingspace.domain.enums.FeeType;
 import com.si9nal.parker.parkingspace.domain.enums.ParkingType;
 import com.si9nal.parker.parkingspace.domain.enums.ParkingUsage;
 import jakarta.persistence.*;
+
 import lombok.*;
+
 import org.locationtech.jts.geom.Point;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 
 @Entity
@@ -46,9 +47,10 @@ public class ParkingSpace extends BaseEntity {
 
     private Double latitude;
 
+
     private Double longitude;
 
-    @Column(columnDefinition = "POINT SRID 4326", nullable = false)
+    @Column(nullable = true, columnDefinition = "POINT SRID 4326")
     private Point point;
 
 
@@ -63,6 +65,7 @@ public class ParkingSpace extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ParkingUsage parkingUsage;
+
 
     @Builder
     public ParkingSpace(String parkingName, String operatingDays, LocalTime weekdayStartTime,
@@ -94,12 +97,7 @@ public class ParkingSpace extends BaseEntity {
         this.feeType = feeType;
         this.parkingUsage = parkingUsage;
 
-        try {
-            updateLocation(latitude, longitude);
-        } catch (Exception e) {
-            // 로깅 추가 고려
-            this.point = null;
-        }
+      
     }
 
     public void updateLocation(Double latitude, Double longitude) throws Exception {
@@ -114,4 +112,5 @@ public class ParkingSpace extends BaseEntity {
             this.point = null;
         }
     }
+
 }
