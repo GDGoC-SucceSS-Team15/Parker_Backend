@@ -26,8 +26,11 @@ public class CameraLocation {
 
     private Double longitude;
 
-    @Column(nullable = false, columnDefinition = "POINT SRID 4326")
-    private Point location;
+    @Column(nullable = true, columnDefinition = "POINT SRID 4326")
+    private Point point;
+
+    @Column(nullable = false)
+    private String borough;
 
     @Column(nullable = false)
     private String areaName;
