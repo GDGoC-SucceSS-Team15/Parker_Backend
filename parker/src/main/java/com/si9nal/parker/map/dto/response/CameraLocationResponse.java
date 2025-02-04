@@ -1,11 +1,11 @@
 package com.si9nal.parker.map.dto.response;
 
 import com.si9nal.parker.camera.domain.CameraLocation;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class CameraLocationResponse {
     private String address;
     private Double latitude;
@@ -14,12 +14,12 @@ public class CameraLocationResponse {
     private String classification;
 
     public static CameraLocationResponse fromEntity(CameraLocation camera) {
-        return new CameraLocationResponse(
-                camera.getAddress(),
-                camera.getLatitude(),
-                camera.getLongitude(),
-                camera.getAreaName(),
-                camera.getClassification()
-        );
+        return CameraLocationResponse.builder()
+                .address(camera.getAddress())
+                .latitude(camera.getLatitude())
+                .longitude(camera.getLongitude())
+                .areaName(camera.getAreaName())
+                .classification(camera.getClassification())
+                .build();
     }
 }

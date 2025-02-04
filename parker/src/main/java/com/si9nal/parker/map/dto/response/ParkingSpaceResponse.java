@@ -1,11 +1,11 @@
 package com.si9nal.parker.map.dto.response;
 
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class ParkingSpaceResponse {
     private String parkingName;
     private String address;
@@ -14,12 +14,12 @@ public class ParkingSpaceResponse {
     private Double longitude;
 
     public static ParkingSpaceResponse fromEntity(ParkingSpace parkingSpace) {
-        return new ParkingSpaceResponse(
-                parkingSpace.getParkingName(),
-                parkingSpace.getAddress(),
-                parkingSpace.getTotalParkingSpaces(),
-                parkingSpace.getLatitude(),
-                parkingSpace.getLongitude()
-        );
+        return ParkingSpaceResponse.builder()
+                .parkingName(parkingSpace.getParkingName())
+                .address(parkingSpace.getAddress())
+                .totalParkingSpaces(parkingSpace.getTotalParkingSpaces())
+                .latitude(parkingSpace.getLatitude())
+                .longitude(parkingSpace.getLongitude())
+                .build();
     }
 }
