@@ -17,7 +17,12 @@ public enum ErrorStatus implements BaseErrorCode {
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
     // 멤버 관려 에러
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4001", "사용자가 없습니다.");
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4001", "사용자가 없습니다."),
+
+    // 주차 공간 관련 에러 추가
+    PARKING_SPACE_INVALID_LATITUDE(HttpStatus.BAD_REQUEST, "PARKING4001", "유효하지 않은 위도 값입니다. -90에서 90 사이의 값이어야 합니다."),
+    PARKING_SPACE_INVALID_LONGITUDE(HttpStatus.BAD_REQUEST, "PARKING4002", "유효하지 않은 경도 값입니다. -180에서 180 사이의 값이어야 합니다."),
+    PARKING_SPACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PARKING4004", "주변에 주차 공간을 찾을 수 없습니다.");
 
 
     private final HttpStatus httpStatus;

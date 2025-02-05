@@ -20,7 +20,7 @@ spring:
         use_sql_comments: true
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: qV0sz16STguF35B/MR0Rf9p8lu+N01DivhKVyKIgGes=
   access-token-validity-in-milliseconds: ${ACCESS_TOKEN_VALIDITY_IN_MILLISECONDS}
 
 
@@ -28,9 +28,11 @@ springdoc:
   swagger-ui:
     path: /swagger-ui/index.html
     enabled: true
-
   api-docs:
+#    path: /v3/api-docs
     enabled: true
+#  default-produces-media-type: application/json
+#  default-consumes-media-type: application/json
 
 server:
   port: 8080
