@@ -3,6 +3,11 @@ package com.si9nal.parker.global.common.apiPayload.exception;
 import com.si9nal.parker.global.common.apiPayload.ApiResponse;
 import com.si9nal.parker.global.common.apiPayload.code.ErrorReasonDTO;
 import com.si9nal.parker.global.common.apiPayload.code.status.ErrorStatus;
+import com.si9nal.parker.map.controller.MapMainController;
+import com.si9nal.parker.parkingspace.controller.ParkingSpaceController;
+import com.si9nal.parker.parkingvioation.controller.ParkingViolationDetailController;
+import com.si9nal.parker.user.controller.UserController;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 @Slf4j
+@Hidden
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
