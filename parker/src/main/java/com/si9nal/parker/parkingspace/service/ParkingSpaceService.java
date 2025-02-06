@@ -1,5 +1,7 @@
 package com.si9nal.parker.parkingspace.service;
 
+import com.si9nal.parker.global.common.apiPayload.code.status.ErrorStatus;
+import com.si9nal.parker.global.common.apiPayload.exception.GeneralException;
 import com.si9nal.parker.global.common.util.Direction;
 import com.si9nal.parker.global.common.util.GeometryUtil;
 import com.si9nal.parker.global.common.util.Location;
@@ -19,9 +21,12 @@ public class ParkingSpaceService {
     public ParkingSpaceService(ParkingSpaceRepository repository) {
         this.repository = repository;
     }
+
     private static final Logger logger = LoggerFactory.getLogger(ParkingSpaceService.class);
-    public List<ParkingSpace> getParkingSpaces(Double latitude, Double longitude, Double distance) throws Exception {
+
+    public List<ParkingSpace> getParkingSpaces(Double latitude, Double longitude, Double distance) {
         logger.info("Fetching parking spaces for lat: {}, lon: {}, distance: {}", latitude, longitude, distance);
+
         // 위도, 경도 유효성 검사 추가
         validateCoordinates(latitude, longitude);
 
@@ -34,15 +39,21 @@ public class ParkingSpaceService {
                 northEast.getLatitude(), northEast.getLongitude(),
                 southWest.getLatitude(), southWest.getLongitude());
 
-        return repository.findWithinRectangle(lineStringWkt);
+        List<ParkingSpace> parkingSpaces = repository.findWithinRectangle(lineStringWkt);
+
+        if (parkingSpaces.isEmpty()) {
+            throw new GeneralException(ErrorStatus.PARKING_SPACE_NOT_FOUND);
+        }
+
+        return parkingSpaces;
     }
 
     private void validateCoordinates(Double latitude, Double longitude) {
         if (latitude < -90 || latitude > 90) {
-            throw new IllegalArgumentException("위도는 -90에서 90 사이의 값이어야 합니다.");
+            throw new GeneralException(ErrorStatus.PARKING_SPACE_INVALID_LATITUDE);
         }
         if (longitude < -180 || longitude > 180) {
-            throw new IllegalArgumentException("경도는 -180에서 180 사이의 값이어야 합니다.");
+            throw new GeneralException(ErrorStatus.PARKING_SPACE_INVALID_LONGITUDE);
         }
     }
 }
