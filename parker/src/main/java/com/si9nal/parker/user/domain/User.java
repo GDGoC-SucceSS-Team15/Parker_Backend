@@ -32,6 +32,8 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    private String profileImageUrl;
+
     @Enumerated(EnumType.STRING)
     private Status status = Status.ACTIVE;
 }

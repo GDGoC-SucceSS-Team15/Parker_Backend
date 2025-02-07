@@ -4,6 +4,7 @@ import com.si9nal.parker.global.common.security.TokenProvider;
 import com.si9nal.parker.user.domain.User;
 import com.si9nal.parker.user.dto.req.UserLoginReqDto;
 import com.si9nal.parker.user.dto.req.UserSignupReqDto;
+import com.si9nal.parker.user.dto.res.MyPageUserInfoResDto;
 import com.si9nal.parker.user.dto.res.TokenDto;
 import com.si9nal.parker.user.dto.res.UserInfoResDto;
 import com.si9nal.parker.user.repository.UserRepository;

@@ -2,6 +2,7 @@ package com.si9nal.parker.user.controller;
 
 import com.si9nal.parker.user.dto.req.UserLoginReqDto;
 import com.si9nal.parker.user.dto.req.UserSignupReqDto;
+import com.si9nal.parker.user.dto.res.MyPageUserInfoResDto;
 import com.si9nal.parker.user.dto.res.TokenDto;
 import com.si9nal.parker.user.dto.res.UserInfoResDto;
 import com.si9nal.parker.user.service.UserService;
@@ -9,10 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
 
 @RestController
