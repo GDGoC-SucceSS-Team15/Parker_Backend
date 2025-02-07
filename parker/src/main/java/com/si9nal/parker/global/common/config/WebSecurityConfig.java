@@ -28,8 +28,7 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-
-                        .requestMatchers("/api/user/signup", "/api/user/login", "/api/parker/**", "/v3/api-docs/**",
+                        .requestMatchers("/api/user/signup", "/api/user/login", "/v3/api-docs/**",
                                 "/swagger-ui/**").permitAll()
 
                         .anyRequest().authenticated()
