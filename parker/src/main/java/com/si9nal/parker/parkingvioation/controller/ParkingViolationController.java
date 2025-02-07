@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-    @RequestMapping("/api/parkingViolation")
+    @RequestMapping("/api/parking-violation")
     public class ParkingViolationController {
         private final ParkingViolationService parkingViolationService;
 
