@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/myPage")
+@RequestMapping("/api/my-page")
 public class MyPageController {
     private final MyPageService myPageService;
 
