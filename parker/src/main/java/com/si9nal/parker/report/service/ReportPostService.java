@@ -47,8 +47,7 @@ public class ReportPostService {
         Report report = requestDto.toEntity();
         report.setUser(user);
 
-        MultipartFile image = requestDto.getImage();
-        if (image != null && !image.isEmpty()) {
+        if (requestDto.hasImage()) {
             Uuid imgUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
             String imgURL = s3Manager.uploadFile(s3Manager.generateReportKeyName(imgUuid), requestDto.getImage());
             report.setImageUrl(imgURL);
