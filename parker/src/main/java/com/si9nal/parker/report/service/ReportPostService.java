@@ -23,14 +23,21 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@Transactional
 public class ReportPostService {
     private final ReportRepository reportRepository;
     private final UserRepository userRepository;
     private final AmazonS3Manager s3Manager;
     private final UuidRepository uuidRepository;
 
-    @Transactional
+    public ReportPostService(ReportRepository reportRepository, UserRepository userRepository, AmazonS3Manager s3Manager, UuidRepository uuidRepository) {
+        this.reportRepository = reportRepository;
+        this.userRepository = userRepository;
+        this.s3Manager = s3Manager;
+        this.uuidRepository = uuidRepository;
+    }
+
+
     public ReportPostResponseDto createReport(String email, ReportPostRequestDto requestDto) {
 
         User user = userRepository.findByEmail(email)
