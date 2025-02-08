@@ -41,9 +41,12 @@ public class MapMainController {
 
     @GetMapping("/parking-space/{id}")
     public ResponseEntity<ParkingSpaceSummaryResponse> getParkingSpaceDetail(
-            @PathVariable Long id, Principal principal){
+            @PathVariable Long id,
+            @RequestParam Double latitude,
+            @RequestParam Double longitude,
+            Principal principal){
 
-        ParkingSpaceSummaryResponse response = mapMainService.getParkingSpaceDetail(id, principal);
+        ParkingSpaceSummaryResponse response = mapMainService.getParkingSpaceDetail(id, principal, latitude, longitude);
 
         return ResponseEntity.ok(response);
     }

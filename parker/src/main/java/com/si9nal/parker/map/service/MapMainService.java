@@ -98,7 +98,7 @@ public class MapMainService {
     /**
      * 메인 지도에서 주차장의 기본적인 상세정보를 조회
      */
-    public ParkingSpaceSummaryResponse getParkingSpaceDetail(Long id, Principal principal) {
+    public ParkingSpaceSummaryResponse getParkingSpaceDetail(Long id, Principal principal, Double latitude, Double longitude) {
         ParkingSpace parkingSpace = parkingSpaceRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("주차장을 찾을 수 없습니다."));
 
@@ -110,6 +110,15 @@ public class MapMainService {
             isBookmarked = spaceBookmarkRepository.existsByUserAndParkingSpace(user, parkingSpace);
         }
 
-        return ParkingSpaceSummaryResponse.of(parkingSpace, isBookmarked);
+        if (latitude == null || longitude == null) {
+            throw new IllegalArgumentException("위도와 경도 값이 필요합니다.");
+        }
+
+        double lat = latitude;
+        double lon = longitude;
+
+        double distance = GeometryUtil.calculateDistance(lat, lon, parkingSpace.getLatitude(), parkingSpace.getLongitude());
+
+        return ParkingSpaceSummaryResponse.of(parkingSpace, isBookmarked, distance);
     }
 }

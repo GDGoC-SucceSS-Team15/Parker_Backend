@@ -27,7 +27,9 @@ public class ParkingSpaceSummaryResponse {
 
     private boolean isBookmarked;
 
-    public static ParkingSpaceSummaryResponse of(ParkingSpace parkingSpace, boolean isBookmarked) {
+    private String distance;
+
+    public static ParkingSpaceSummaryResponse of(ParkingSpace parkingSpace, boolean isBookmarked, Double distance) {
         return ParkingSpaceSummaryResponse.builder()
                 .id(parkingSpace.getId())
                 .parkingName(parkingSpace.getParkingName())
@@ -38,6 +40,7 @@ public class ParkingSpaceSummaryResponse {
                 .latitude(parkingSpace.getLatitude())
                 .longitude(parkingSpace.getLongitude())
                 .isBookmarked(isBookmarked)
+                .distance(formatDistance(distance))
                 .build();
     }
 
@@ -48,6 +51,13 @@ public class ParkingSpaceSummaryResponse {
             return "정보 없음";
         }
         return String.format("%s ~ %s", startTime.format(TIME_FORMATTER), endTime.format(TIME_FORMATTER));
+    }
+
+    private static String formatDistance(Double distance) {
+        if (distance == null) {
+            return "정보 없음";
+        }
+        return String.format("%.1fkm", distance);
     }
 }
 
