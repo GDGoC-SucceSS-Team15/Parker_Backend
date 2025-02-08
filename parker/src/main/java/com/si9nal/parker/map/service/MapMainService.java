@@ -42,11 +42,11 @@ public class MapMainService {
         Location camera_southWest = GeometryUtil.calculate(latitude, longitude, 0.5, 225.0);
 
         // 주차 공간 조회
-        List<ParkingSpaceResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
+        List<ParkingSpaceSimpleResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
                         southWest.getLatitude(), northEast.getLatitude(),
                         southWest.getLongitude(), northEast.getLongitude())
                 .stream()
-                .map(ParkingSpaceResponse::fromEntity)
+                .map(ParkingSpaceSimpleResponse::fromEntity)
                 .collect(Collectors.toList());
 
         // 단속 카메라 위치 조회
@@ -73,17 +73,17 @@ public class MapMainService {
         Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
 
         // 주차 공간 조회
-        List<ParkingSpaceResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
+        List<ParkingSpaceSimpleResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
                         southWest.getLatitude(), northEast.getLatitude(),
                         southWest.getLongitude(), northEast.getLongitude())
                 .stream()
-                .map(ParkingSpaceResponse::fromEntity)
+                .map(ParkingSpaceSimpleResponse::fromEntity)
                 .collect(Collectors.toList());
 
         // 시군구이름으로 조회
-        List<ParkingViolationResponse> parkingViolations = parkingViolationRepository.findBySigunguName(sigunguName)
+        List<ParkingViolationSimpleResponse> parkingViolations = parkingViolationRepository.findBySigunguName(sigunguName)
                 .stream()
-                .map(ParkingViolationResponse::fromEntity)
+                .map(ParkingViolationSimpleResponse::fromEntity)
                 .collect(Collectors.toList());
 
 
