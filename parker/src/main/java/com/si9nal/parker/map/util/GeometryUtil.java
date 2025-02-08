@@ -6,6 +6,11 @@ public class GeometryUtil {
 
     /**
      * 현재 위치에서 특정 거리만큼 이동한 지점의 좌표 계산
+     * @param baseLatitude 기준 위도
+     * @param baseLongitude 기준 경도
+     * @param distance 이동 거리 (km)
+     * @param bearing 이동 방향 (도 단위, 0: 북, 90: 동, 180: 남, 270: 서)
+     * @return 이동 후 좌표 (위도, 경도)
      */
     public static Location calculate(Double baseLatitude, Double baseLongitude, Double distance,
                                      Double bearing) {
@@ -45,6 +50,11 @@ public class GeometryUtil {
 
     /**
      * 하버사인 공식을 기반으로 위도, 경도를 기반으로 두 지점 간 직선 거리를 계산
+     * @param lat1 첫 번째 위도
+     * @param lon1 첫 번째 경도
+     * @param lat2 두 번째 위도
+     * @param lon2 두 번째 경도
+     * @return 두 지점 간 거리 (km)
      */
     public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         final double EARTH_RADIUS_KM = 6371; // R = 지구 반지름
