@@ -121,4 +121,14 @@ public class MapMainService {
 
         return ParkingSpaceSummaryResponse.of(parkingSpace, isBookmarked, distance);
     }
+
+    /**
+     * 현재 위치 근처 주차장 리스트에서 하나의 주차장의 상세정보 조회
+     */
+    public ParkingSpaceDetailResponse getParkingSpaceNearbyDetail(Long id) {
+        ParkingSpace parkingSpace = parkingSpaceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("주차장을 찾을 수 없습니다."));
+
+        return ParkingSpaceDetailResponse.fromEntity(parkingSpace);
+    }
 }
