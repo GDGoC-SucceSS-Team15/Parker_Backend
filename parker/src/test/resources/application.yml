@@ -3,7 +3,7 @@ spring:
     name: parker
 
   datasource:
-    url: ${DB_TEST_URL}
+    url: jdbc:mysql://localhost:3306/parker_test
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,12 +12,20 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: create-drop  # 테스트마다 DB 초기화
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         use_sql_comments: true
 
+jwt:
+  secret: ${JWT_SECRET}
+  token-validity-in-milliseconds: 3600000
+
 server:
   port: 8080
+
+logging:
+  level:
+    org.springframework: DEBUG
