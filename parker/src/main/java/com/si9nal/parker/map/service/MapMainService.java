@@ -2,6 +2,8 @@ package com.si9nal.parker.map.service;
 
 import com.si9nal.parker.bookmark.repository.SpaceBookmarkRepository;
 import com.si9nal.parker.camera.repository.CameraLocationRepository;
+import com.si9nal.parker.global.common.apiPayload.code.status.ErrorStatus;
+import com.si9nal.parker.global.common.apiPayload.exception.GeneralException;
 import com.si9nal.parker.map.dto.response.*;
 import com.si9nal.parker.map.util.GeometryUtil;
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
@@ -36,6 +38,9 @@ public class MapMainService {
      * 사용자 위치 2km 이내의 주차공간과 2km 이내의 카메라 단속 위치
      */
     public Map<String, Object> findNearbyParkingSpacesAndCameras(Double latitude, Double longitude) {
+
+        validateCoordinates(latitude, longitude);
+
         Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, 45.0);
         Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
 
@@ -70,6 +75,9 @@ public class MapMainService {
      * 사용자 위치 2km 이내의 주차공간과 시군구 이름으로 주정차금지구역 불러오기
      */
     public Map<String, Object> findNearbyParkingSpacesAndNoStoppingZones(Double latitude, Double longitude, String sigunguName) {
+
+        validateCoordinates(latitude, longitude);
+
         Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, 45.0);
         Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
 
@@ -100,19 +108,18 @@ public class MapMainService {
      * 메인 지도에서 주차장의 기본적인 상세정보를 조회
      */
     public ParkingSpaceSummaryResponse getParkingSpaceDetail(Long id, Principal principal, Double latitude, Double longitude) {
+
+        validateCoordinates(latitude, longitude);
+
         ParkingSpace parkingSpace = parkingSpaceRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("주차장을 찾을 수 없습니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_SPACE_NOT_FOUND));
 
         boolean isBookmarked = false;
 
         if (principal != null) {
             User user = userRepository.findByEmail(principal.getName())
-                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
             isBookmarked = spaceBookmarkRepository.existsByUserAndParkingSpace(user, parkingSpace);
-        }
-
-        if (latitude == null || longitude == null) {
-            throw new IllegalArgumentException("위도와 경도 값이 필요합니다.");
         }
 
         double lat = latitude;
@@ -128,7 +135,7 @@ public class MapMainService {
      */
     public ParkingSpaceDetailResponse getParkingSpaceNearbyDetail(Long id) {
         ParkingSpace parkingSpace = parkingSpaceRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("주차장을 찾을 수 없습니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_SPACE_NOT_FOUND));
 
         return ParkingSpaceDetailResponse.fromEntity(parkingSpace);
     }
@@ -138,6 +145,9 @@ public class MapMainService {
      * 2km 이내의 현재 위치 근처 주차장 리스트 조회
      */
     public ParkingSpaceNearbyResponseList findNearbyParkingSpaces(Double latitude, Double longitude) {
+
+        validateCoordinates(latitude, longitude);
+
         Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, 45.0);
         Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
 
@@ -175,6 +185,18 @@ public class MapMainService {
 
         public ParkingSpaceNearbyResponse toResponse() {
             return ParkingSpaceNearbyResponse.of(parkingSpace, distance);
+        }
+    }
+
+    /**
+     * 위도와 경도의 범위 유효성을 검사하는 메서드
+     */
+    private void validateCoordinates(Double latitude, Double longitude) {
+        if (latitude == null || latitude < -90 || latitude > 90) {
+            throw new GeneralException(ErrorStatus.PARKING_SPACE_INVALID_LATITUDE);
+        }
+        if (longitude == null || longitude < -180 || longitude > 180) {
+            throw new GeneralException(ErrorStatus.PARKING_SPACE_INVALID_LONGITUDE);
         }
     }
 }
