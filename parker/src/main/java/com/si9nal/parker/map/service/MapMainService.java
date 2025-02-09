@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,5 +131,50 @@ public class MapMainService {
                 .orElseThrow(() -> new IllegalArgumentException("주차장을 찾을 수 없습니다."));
 
         return ParkingSpaceDetailResponse.fromEntity(parkingSpace);
+    }
+
+
+    /**
+     * 2km 이내의 현재 위치 근처 주차장 리스트 조회
+     */
+    public ParkingSpaceNearbyResponseList findNearbyParkingSpaces(Double latitude, Double longitude) {
+        Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, 45.0);
+        Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
+
+        // 2km 범위 내 주차장 조회
+        List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
+                southWest.getLatitude(), northEast.getLatitude(),
+                southWest.getLongitude(), northEast.getLongitude());
+
+        // 거리 계산 후 정렬
+        List<ParkingSpaceNearbyResponse> responses = parkingSpaces.stream()
+                .map(space -> {
+                    double distance = GeometryUtil.calculateDistance(latitude, longitude, space.getLatitude(), space.getLongitude());
+                    return new ParkingSpaceWithDistance(space, distance);
+                })
+                .sorted(Comparator.comparingDouble(ParkingSpaceWithDistance::getDistance))
+                .map(ParkingSpaceWithDistance::toResponse)
+                .collect(Collectors.toList());
+
+        return ParkingSpaceNearbyResponseList.from(responses);
+    }
+
+    // 주차장 엔티티와 거리 정보를 함께 담을 클래스
+    private static class ParkingSpaceWithDistance {
+        private final ParkingSpace parkingSpace;
+        private final double distance;
+
+        public ParkingSpaceWithDistance(ParkingSpace parkingSpace, double distance) {
+            this.parkingSpace = parkingSpace;
+            this.distance = distance;
+        }
+
+        public double getDistance() {
+            return distance;
+        }
+
+        public ParkingSpaceNearbyResponse toResponse() {
+            return ParkingSpaceNearbyResponse.of(parkingSpace, distance);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.si9nal.parker.map.controller;
 
 import com.si9nal.parker.map.dto.response.ParkingSpaceDetailResponse;
+import com.si9nal.parker.map.dto.response.ParkingSpaceNearbyResponseList;
 import com.si9nal.parker.map.dto.response.ParkingSpaceSummaryResponse;
 import com.si9nal.parker.map.service.MapMainService;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,17 @@ public class MapMainController {
             @PathVariable Long id){
 
         ParkingSpaceDetailResponse response = mapMainService.getParkingSpaceNearbyDetail(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/parking-space/nearby")
+    public ResponseEntity<ParkingSpaceNearbyResponseList> getNearbyParkingSpaces(
+            @RequestParam Double latitude,
+            @RequestParam Double longitude){
+
+        ParkingSpaceNearbyResponseList response = mapMainService.findNearbyParkingSpaces(latitude, longitude);
 
         return ResponseEntity.ok(response);
     }
