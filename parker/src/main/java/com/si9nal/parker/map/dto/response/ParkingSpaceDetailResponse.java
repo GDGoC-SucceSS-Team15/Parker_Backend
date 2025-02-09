@@ -38,24 +38,24 @@ public class ParkingSpaceDetailResponse {
     public static ParkingSpaceDetailResponse fromEntity(ParkingSpace parkingSpace) {
         return ParkingSpaceDetailResponse.builder()
                 .id(parkingSpace.getId())
-                .parkingName(parkingSpace.getParkingName() != null && !parkingSpace.getParkingName().isEmpty() ? parkingSpace.getParkingName() : "정보 없음")
+                .parkingName(getValueOrDefault(parkingSpace.getParkingName()))
 
                 .parkingUsage(parkingSpace.getParkingUsage() != null ? parkingSpace.getParkingUsage().getKorean() : "정보 없음")
                 .parkingType(parkingSpace.getParkingType() != null ? parkingSpace.getParkingType().getKorean() : "정보 없음")
-                .totalParkingSpaces(parkingSpace.getTotalParkingSpaces() != null ? parkingSpace.getTotalParkingSpaces().toString() : "정보 없음")
+                .totalParkingSpaces(getValueOrDefault(parkingSpace.getTotalParkingSpaces()))
 
-                .operatingDays(parkingSpace.getOperatingDays() != null && !parkingSpace.getOperatingDays().isEmpty() ? parkingSpace.getOperatingDays() : "정보 없음")
+                .operatingDays(getValueOrDefault(parkingSpace.getOperatingDays()))
 
                 .weekdayTime(formatTimeRange(parkingSpace.getWeekdayStartTime(), parkingSpace.getWeekdayEndTime()))
                 .saturdayTime(formatTimeRange(parkingSpace.getSaturdayStartTime(), parkingSpace.getSaturdayEndTime()))
                 .holidayTime(formatTimeRange(parkingSpace.getHolidayStartTime(), parkingSpace.getHolidayEndTime()))
 
-                .baseParkingTime(parkingSpace.getBaseParkingTime() != null ? parkingSpace.getBaseParkingTime().toString() : "정보 없음")
-                .baseParkingFee(parkingSpace.getBaseParkingFee() != null ? parkingSpace.getBaseParkingFee().toString() : "정보 없음")
-                .additionalUnitFee(parkingSpace.getAdditionalUnitFee() != null ? parkingSpace.getAdditionalUnitFee().toString() : "정보 없음")
+                .baseParkingTime(getValueOrDefault(parkingSpace.getBaseParkingTime()))
+                .baseParkingFee(getValueOrDefault(parkingSpace.getBaseParkingFee()))
+                .additionalUnitFee(getValueOrDefault(parkingSpace.getAdditionalUnitFee()))
 
-                .managingAgency(parkingSpace.getManagingAgency() != null && !parkingSpace.getManagingAgency().isEmpty() ? parkingSpace.getManagingAgency() : "정보 없음")
-                .phoneNumber(parkingSpace.getPhoneNumber() != null && !parkingSpace.getPhoneNumber().isEmpty() ? parkingSpace.getPhoneNumber() : "정보 없음")
+                .managingAgency(getValueOrDefault(parkingSpace.getManagingAgency()))
+                .phoneNumber(getValueOrDefault(parkingSpace.getPhoneNumber()))
                 .build();
     }
 
@@ -66,5 +66,9 @@ public class ParkingSpaceDetailResponse {
             return "정보 없음";
         }
         return String.format("%s ~ %s", startTime.format(TIME_FORMATTER), endTime.format(TIME_FORMATTER));
+    }
+
+    private static String getValueOrDefault(Object value) {
+        return (value != null && !value.toString().isEmpty()) ? value.toString() : "정보 없음";
     }
 }
