@@ -1,6 +1,6 @@
-package com.si9nal.parker.parkingvioation.dto.res;
+package com.si9nal.parker.parkingviolation.dto.res;
 
-import com.si9nal.parker.parkingvioation.domain.ParkingViolation;
+import com.si9nal.parker.parkingviolation.domain.ParkingViolation;
 import lombok.Builder;
 import lombok.Getter;
 
