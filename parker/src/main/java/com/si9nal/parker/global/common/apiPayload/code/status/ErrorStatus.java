@@ -22,8 +22,13 @@ public enum ErrorStatus implements BaseErrorCode {
     // 주차 공간 관련 에러 추가
     PARKING_SPACE_INVALID_LATITUDE(HttpStatus.BAD_REQUEST, "PARKING4001", "유효하지 않은 위도 값입니다. -90에서 90 사이의 값이어야 합니다."),
     PARKING_SPACE_INVALID_LONGITUDE(HttpStatus.BAD_REQUEST, "PARKING4002", "유효하지 않은 경도 값입니다. -180에서 180 사이의 값이어야 합니다."),
-    PARKING_SPACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PARKING4004", "주변에 주차 공간을 찾을 수 없습니다.");
+    PARKING_SPACE_NOT_FOUND(HttpStatus.NOT_FOUND, "PARKING4004", "주변에 주차 공간을 찾을 수 없습니다."),
 
+    // 신고 관련 에러
+    REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "REPORT4001", "해당 신고를 찾을 수 없습니다."),
+    REPORT_UNAUTHORIZED(HttpStatus.FORBIDDEN, "REPORT4002", "해당 신고에 대한 권한이 없습니다."),
+    REPORT_ALREADY_PROCESSED(HttpStatus.BAD_REQUEST, "REPORT4003", "이미 처리된 신고입니다."),
+    REPORT_INVALID_STATUS(HttpStatus.BAD_REQUEST, "REPORT4004", "유효하지 않은 신고 상태입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
