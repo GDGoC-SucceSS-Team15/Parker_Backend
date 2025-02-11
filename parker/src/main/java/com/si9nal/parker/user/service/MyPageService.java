@@ -1,5 +1,7 @@
 package com.si9nal.parker.user.service;
 
+import com.si9nal.parker.global.common.apiPayload.exception.GeneralException;
+import com.si9nal.parker.global.common.apiPayload.code.status.ErrorStatus;
 import com.si9nal.parker.global.common.s3.S3Service;
 import com.si9nal.parker.user.domain.User;
 import com.si9nal.parker.user.dto.res.MyPageUserInfoResDto;
@@ -22,14 +24,15 @@ public class MyPageService {
 
     @Transactional(readOnly = true)
     public MyPageUserInfoResDto getMyPageUserInfo(Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
         return MyPageUserInfoResDto.fromEntity(user);
     }
 
     @Transactional
     public MyPageUserInfoResDto updateMyPageUserInfo(Principal principal, String nickname, MultipartFile file) {
-        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
-
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
         if (nickname != null && !nickname.trim().isEmpty() && !nickname.equals(user.getNickname())) {
             user.setNickname(nickname.trim());
@@ -43,7 +46,7 @@ public class MyPageService {
                 String newImageUrl = s3Service.uploadFile(file);
                 user.setProfileImageUrl(newImageUrl);
             } catch (Exception e) {
-                throw new RuntimeException("파일 업로드 중 오류 발생: " + e.getMessage(), e);
+                throw new GeneralException(ErrorStatus.FILE_UPLOAD_FAILED);
             }
         }
 

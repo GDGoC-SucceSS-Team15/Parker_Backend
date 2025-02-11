@@ -1,5 +1,7 @@
 package com.si9nal.parker.parkingviolation.service;
 
+import com.si9nal.parker.global.common.apiPayload.code.status.ErrorStatus;
+import com.si9nal.parker.global.common.apiPayload.exception.GeneralException;
 import com.si9nal.parker.parkingviolation.domain.ParkingViolation;
 import com.si9nal.parker.parkingviolation.dto.res.ParkingViolationDetailResponseDto;
 import com.si9nal.parker.parkingviolation.repository.ParkingViolationRepository;
@@ -17,23 +19,21 @@ public class ParkingViolationDetailService {
     }
 
     public List<ParkingViolationDetailResponseDto> getAllParkingViolationDetails() {
-        List<ParkingViolation> parkingViolations = parkingViolationRepository.findAll();
-
-        return parkingViolations.stream()
+        return parkingViolationRepository.findAll().stream()
                 .map(ParkingViolationDetailResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
     public ParkingViolationDetailResponseDto getParkingViolationDetailByDetailedLocation(String detailedLocation) {
         ParkingViolation violation = parkingViolationRepository.findByDetailedLocation(detailedLocation)
-                .orElseThrow(() -> new IllegalArgumentException("해당 위치의 불법 주정차 정보가 없습니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_SPACE_NOT_FOUND));
 
         return ParkingViolationDetailResponseDto.fromEntity(violation);
     }
 
     public ParkingViolationDetailResponseDto getParkingViolationDetailById(Long id) {
         ParkingViolation violation = parkingViolationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 위치의 불법 주정차 정보가 없습니ㅏㄷ."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_SPACE_NOT_FOUND));
 
         return ParkingViolationDetailResponseDto.fromEntity(violation);
     }
