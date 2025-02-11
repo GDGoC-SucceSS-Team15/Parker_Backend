@@ -1,4 +1,4 @@
-package com.si9nal.parker.map.dto.response;
+package com.si9nal.parker.parkingviolation.dto.res;
 
 import com.si9nal.parker.parkingviolation.domain.ParkingViolation;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Getter
 @Builder
-public class ParkingViolationResponse {
+public class ParkingViolationResDto {
     private Long id;
     private String sidoName;
     private String sigunguName;
@@ -22,8 +22,8 @@ public class ParkingViolationResponse {
     private LocalTime holidayStartTime;
     private LocalTime holidayEndTime;
 
-    public static ParkingViolationResponse fromEntity(ParkingViolation parkingViolation) {
-        return ParkingViolationResponse.builder()
+    public static ParkingViolationResDto fromEntity(ParkingViolation parkingViolation) {
+        return ParkingViolationResDto.builder()
                 .id(parkingViolation.getId())
                 .sidoName(parkingViolation.getSidoName())
                 .sigunguName(parkingViolation.getSigunguName())

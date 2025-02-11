@@ -1,8 +1,8 @@
-package com.si9nal.parker.parkingvioation.service;
+package com.si9nal.parker.parkingviolation.service;
 
-import com.si9nal.parker.parkingvioation.domain.ParkingViolation;
-import com.si9nal.parker.parkingvioation.dto.res.ParkingViolationDetailResponseDto;
-import com.si9nal.parker.parkingvioation.repository.ParkingViolationRepository;
+import com.si9nal.parker.parkingviolation.domain.ParkingViolation;
+import com.si9nal.parker.parkingviolation.dto.res.ParkingViolationDetailResponseDto;
+import com.si9nal.parker.parkingviolation.repository.ParkingViolationRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;

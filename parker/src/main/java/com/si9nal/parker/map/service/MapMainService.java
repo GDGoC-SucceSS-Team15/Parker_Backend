@@ -7,7 +7,7 @@ import com.si9nal.parker.map.dto.response.ParkingSpaceResponse;
 import com.si9nal.parker.map.dto.response.ParkingViolationResponse;
 import com.si9nal.parker.map.util.GeometryUtil;
 import com.si9nal.parker.parkingspace.repository.ParkingSpaceRepository;
-import com.si9nal.parker.parkingvioation.repository.ParkingViolationRepository;
+import com.si9nal.parker.parkingviolation.repository.ParkingViolationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

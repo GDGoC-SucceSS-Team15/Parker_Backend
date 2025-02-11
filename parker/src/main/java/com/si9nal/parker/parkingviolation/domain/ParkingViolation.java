@@ -1,4 +1,4 @@
-package com.si9nal.parker.parkingvioation.domain;
+package com.si9nal.parker.parkingviolation.domain;
 
 import com.si9nal.parker.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -6,10 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
