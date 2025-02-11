@@ -1,17 +1,20 @@
 package com.si9nal.parker.map.service;
 
+import com.si9nal.parker.bookmark.repository.SpaceBookmarkRepository;
 import com.si9nal.parker.camera.repository.CameraLocationRepository;
-import com.si9nal.parker.map.dto.response.CameraLocationResponse;
-import com.si9nal.parker.map.dto.response.Location;
-import com.si9nal.parker.map.dto.response.ParkingSpaceResponse;
-import com.si9nal.parker.map.dto.response.ParkingViolationResponse;
+import com.si9nal.parker.map.dto.response.*;
 import com.si9nal.parker.map.util.GeometryUtil;
+import com.si9nal.parker.parkingspace.domain.ParkingSpace;
 import com.si9nal.parker.parkingspace.repository.ParkingSpaceRepository;
 import com.si9nal.parker.parkingviolation.repository.ParkingViolationRepository;
+import com.si9nal.parker.user.domain.User;
+import com.si9nal.parker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,9 @@ public class MapMainService {
     private final CameraLocationRepository cameraLocationRepository;
     private final ParkingViolationRepository parkingViolationRepository;
 
+    private final UserRepository userRepository;
+    private final SpaceBookmarkRepository spaceBookmarkRepository;
+
     /**
      * 사용자 위치 2km 이내의 주차공간과 2km 이내의 카메라 단속 위치
      */
@@ -37,11 +43,11 @@ public class MapMainService {
         Location camera_southWest = GeometryUtil.calculate(latitude, longitude, 0.5, 225.0);
 
         // 주차 공간 조회
-        List<ParkingSpaceResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
+        List<ParkingSpaceSimpleResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
                         southWest.getLatitude(), northEast.getLatitude(),
                         southWest.getLongitude(), northEast.getLongitude())
                 .stream()
-                .map(ParkingSpaceResponse::fromEntity)
+                .map(ParkingSpaceSimpleResponse::fromEntity)
                 .collect(Collectors.toList());
 
         // 단속 카메라 위치 조회
@@ -68,17 +74,17 @@ public class MapMainService {
         Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
 
         // 주차 공간 조회
-        List<ParkingSpaceResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
+        List<ParkingSpaceSimpleResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
                         southWest.getLatitude(), northEast.getLatitude(),
                         southWest.getLongitude(), northEast.getLongitude())
                 .stream()
-                .map(ParkingSpaceResponse::fromEntity)
+                .map(ParkingSpaceSimpleResponse::fromEntity)
                 .collect(Collectors.toList());
 
         // 시군구이름으로 조회
-        List<ParkingViolationResponse> parkingViolations = parkingViolationRepository.findBySigunguName(sigunguName)
+        List<ParkingViolationSimpleResponse> parkingViolations = parkingViolationRepository.findBySigunguName(sigunguName)
                 .stream()
-                .map(ParkingViolationResponse::fromEntity)
+                .map(ParkingViolationSimpleResponse::fromEntity)
                 .collect(Collectors.toList());
 
 
@@ -87,5 +93,88 @@ public class MapMainService {
         response.put("parkingViolations", parkingViolations);
 
         return response;
+    }
+
+
+    /**
+     * 메인 지도에서 주차장의 기본적인 상세정보를 조회
+     */
+    public ParkingSpaceSummaryResponse getParkingSpaceDetail(Long id, Principal principal, Double latitude, Double longitude) {
+        ParkingSpace parkingSpace = parkingSpaceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("주차장을 찾을 수 없습니다."));
+
+        boolean isBookmarked = false;
+
+        if (principal != null) {
+            User user = userRepository.findByEmail(principal.getName())
+                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+            isBookmarked = spaceBookmarkRepository.existsByUserAndParkingSpace(user, parkingSpace);
+        }
+
+        if (latitude == null || longitude == null) {
+            throw new IllegalArgumentException("위도와 경도 값이 필요합니다.");
+        }
+
+        double lat = latitude;
+        double lon = longitude;
+
+        double distance = GeometryUtil.calculateDistance(lat, lon, parkingSpace.getLatitude(), parkingSpace.getLongitude());
+
+        return ParkingSpaceSummaryResponse.of(parkingSpace, isBookmarked, distance);
+    }
+
+    /**
+     * 현재 위치 근처 주차장 리스트에서 하나의 주차장의 상세정보 조회
+     */
+    public ParkingSpaceDetailResponse getParkingSpaceNearbyDetail(Long id) {
+        ParkingSpace parkingSpace = parkingSpaceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("주차장을 찾을 수 없습니다."));
+
+        return ParkingSpaceDetailResponse.fromEntity(parkingSpace);
+    }
+
+
+    /**
+     * 2km 이내의 현재 위치 근처 주차장 리스트 조회
+     */
+    public ParkingSpaceNearbyResponseList findNearbyParkingSpaces(Double latitude, Double longitude) {
+        Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, 45.0);
+        Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
+
+        // 2km 범위 내 주차장 조회
+        List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
+                southWest.getLatitude(), northEast.getLatitude(),
+                southWest.getLongitude(), northEast.getLongitude());
+
+        // 거리 계산 후 정렬
+        List<ParkingSpaceNearbyResponse> responses = parkingSpaces.stream()
+                .map(space -> {
+                    double distance = GeometryUtil.calculateDistance(latitude, longitude, space.getLatitude(), space.getLongitude());
+                    return new ParkingSpaceWithDistance(space, distance);
+                })
+                .sorted(Comparator.comparingDouble(ParkingSpaceWithDistance::getDistance))
+                .map(ParkingSpaceWithDistance::toResponse)
+                .collect(Collectors.toList());
+
+        return ParkingSpaceNearbyResponseList.from(responses);
+    }
+
+    // 주차장 엔티티와 거리 정보를 함께 담을 클래스
+    private static class ParkingSpaceWithDistance {
+        private final ParkingSpace parkingSpace;
+        private final double distance;
+
+        public ParkingSpaceWithDistance(ParkingSpace parkingSpace, double distance) {
+            this.parkingSpace = parkingSpace;
+            this.distance = distance;
+        }
+
+        public double getDistance() {
+            return distance;
+        }
+
+        public ParkingSpaceNearbyResponse toResponse() {
+            return ParkingSpaceNearbyResponse.of(parkingSpace, distance);
+        }
     }
 }
