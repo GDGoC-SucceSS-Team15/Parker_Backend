@@ -6,7 +6,7 @@ import com.si9nal.parker.map.dto.response.*;
 import com.si9nal.parker.map.util.GeometryUtil;
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
 import com.si9nal.parker.parkingspace.repository.ParkingSpaceRepository;
-import com.si9nal.parker.parkingvioation.repository.ParkingViolationRepository;
+import com.si9nal.parker.parkingviolation.repository.ParkingViolationRepository;
 import com.si9nal.parker.user.domain.User;
 import com.si9nal.parker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

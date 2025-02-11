@@ -1,7 +1,7 @@
-package com.si9nal.parker.parkingvioation.controller;
+package com.si9nal.parker.parkingviolation.controller;
 
-import com.si9nal.parker.parkingvioation.dto.res.ParkingViolationDetailResponseDto;
-import com.si9nal.parker.parkingvioation.service.ParkingViolationDetailService;
+import com.si9nal.parker.parkingviolation.dto.res.ParkingViolationDetailResponseDto;
+import com.si9nal.parker.parkingviolation.service.ParkingViolationDetailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
