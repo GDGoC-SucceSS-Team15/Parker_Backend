@@ -32,6 +32,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
