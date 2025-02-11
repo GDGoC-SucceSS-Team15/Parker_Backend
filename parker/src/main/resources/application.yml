@@ -31,5 +31,19 @@ springdoc:
   api-docs:
     enabled: true
 
+cloud:
+  aws:
+    s3:
+      bucket: ${BUCKET_NAME}
+      path:
+        report : reports
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+
 server:
   port: 8080
