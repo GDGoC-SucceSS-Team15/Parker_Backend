@@ -35,7 +35,7 @@ public class UserService {
     @Transactional
     public UserInfoResDto signUp(UserSignupReqDto request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new GeneralException(ErrorStatus.USER_NOT_FOUND);
+            throw new GeneralException(ErrorStatus.USER_ALREADY_EXISTS);
         }
 
         User user = request.toEntity();
@@ -51,7 +51,7 @@ public class UserService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new GeneralException(ErrorStatus._UNAUTHORIZED);
+            throw new GeneralException(ErrorStatus.INVALID_PASSWORD);
         }
 
         String accessToken = tokenProvider.createAccessToken(user);
@@ -64,7 +64,7 @@ public class UserService {
     @Transactional
     public void logout(Principal principal, HttpServletRequest request) {
         if (principal == null) {
-            throw new GeneralException(ErrorStatus._UNAUTHORIZED);
+            throw new GeneralException(ErrorStatus.USER_NOT_AUTHENTICATED);
         }
 
         User user = userRepository.findByEmail(principal.getName())
@@ -78,7 +78,7 @@ public class UserService {
     @Transactional
     public void deleteUser(Principal principal, HttpServletRequest request) {
         if (principal == null) {
-            throw new GeneralException(ErrorStatus._UNAUTHORIZED);
+            throw new GeneralException(ErrorStatus.USER_NOT_AUTHENTICATED);
         }
 
         User user = userRepository.findByEmail(principal.getName())

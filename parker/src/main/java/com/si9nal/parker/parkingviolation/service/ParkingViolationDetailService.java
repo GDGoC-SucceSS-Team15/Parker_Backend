@@ -26,14 +26,14 @@ public class ParkingViolationDetailService {
 
     public ParkingViolationDetailResponseDto getParkingViolationDetailByDetailedLocation(String detailedLocation) {
         ParkingViolation violation = parkingViolationRepository.findByDetailedLocation(detailedLocation)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_SPACE_NOT_FOUND));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_VIOLATION_NOT_FOUND));
 
         return ParkingViolationDetailResponseDto.fromEntity(violation);
     }
 
     public ParkingViolationDetailResponseDto getParkingViolationDetailById(Long id) {
         ParkingViolation violation = parkingViolationRepository.findById(id)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_SPACE_NOT_FOUND));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_VIOLATION_NOT_FOUND));
 
         return ParkingViolationDetailResponseDto.fromEntity(violation);
     }
