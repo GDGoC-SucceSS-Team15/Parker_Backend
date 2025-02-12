@@ -23,13 +23,6 @@ jwt:
   secret: ${JWT_SECRET}
   access-token-validity-in-milliseconds: ${ACCESS_TOKEN_VALIDITY_IN_MILLISECONDS}
 
-aws:
-  s3:
-    bucket-name: ${AWS_BUCKET_NAME}
-  credentials:
-    access-key: ${AWS_ACCESS_KEY}
-    secret-key: ${AWS_SECRET_ACCESS_KEY}
-    region: ap-northeast-2
 
 springdoc:
   swagger-ui:
@@ -43,7 +36,8 @@ cloud:
     s3:
       bucket: ${BUCKET_NAME}
       path:
-        report : reports
+        reports : reports
+        profile-images : profile-images
     region:
       static: ap-northeast-2
     stack:
