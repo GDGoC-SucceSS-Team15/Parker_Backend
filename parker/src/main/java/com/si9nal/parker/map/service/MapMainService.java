@@ -4,8 +4,10 @@ import com.si9nal.parker.bookmark.repository.SpaceBookmarkRepository;
 import com.si9nal.parker.camera.repository.CameraLocationRepository;
 import com.si9nal.parker.global.common.apiPayload.code.status.ErrorStatus;
 import com.si9nal.parker.global.common.apiPayload.exception.GeneralException;
+import com.si9nal.parker.global.common.util.Direction;
+import com.si9nal.parker.global.common.util.Location;
 import com.si9nal.parker.map.dto.response.*;
-import com.si9nal.parker.map.util.GeometryUtil;
+import com.si9nal.parker.global.common.util.GeometryUtil;
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
 import com.si9nal.parker.parkingspace.repository.ParkingSpaceRepository;
 import com.si9nal.parker.parkingviolation.repository.ParkingViolationRepository;
@@ -41,11 +43,11 @@ public class MapMainService {
 
         validateCoordinates(latitude, longitude);
 
-        Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, 45.0);
-        Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
+        Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, Direction.NORTHEAST.getBearing());
+        Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, Direction.SOUTHWEST.getBearing());
 
-        Location camera_northEast = GeometryUtil.calculate(latitude, longitude, 0.5, 45.0);
-        Location camera_southWest = GeometryUtil.calculate(latitude, longitude, 0.5, 225.0);
+        Location camera_northEast = GeometryUtil.calculate(latitude, longitude, 0.5, Direction.NORTHEAST.getBearing());
+        Location camera_southWest = GeometryUtil.calculate(latitude, longitude, 0.5, Direction.SOUTHWEST.getBearing());
 
         // 주차 공간 조회
         List<ParkingSpaceSimpleResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
@@ -78,8 +80,8 @@ public class MapMainService {
 
         validateCoordinates(latitude, longitude);
 
-        Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, 45.0);
-        Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
+        Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, Direction.NORTHEAST.getBearing());
+        Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, Direction.SOUTHWEST.getBearing());
 
         // 주차 공간 조회
         List<ParkingSpaceSimpleResponse> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
@@ -148,8 +150,8 @@ public class MapMainService {
 
         validateCoordinates(latitude, longitude);
 
-        Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, 45.0);
-        Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, 225.0);
+        Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, Direction.NORTHEAST.getBearing());
+        Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, Direction.SOUTHWEST.getBearing());
 
         // 2km 범위 내 주차장 조회
         List<ParkingSpace> parkingSpaces = parkingSpaceRepository.findParkingSpacesWithinBounds(
