@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/parkingSpace")
+@RequestMapping("/api/parking-space")
 @Tag(name = "주차 공간 API", description = "주변 주차 공간 정보를 제공하는 API")
 public class ParkingSpaceController {
 
