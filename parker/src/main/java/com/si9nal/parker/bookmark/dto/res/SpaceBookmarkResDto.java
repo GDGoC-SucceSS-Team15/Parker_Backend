@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SpaceBookmarkResDto {
-    private boolean isBookmarked; // 북마크 상태 확인용
+    private boolean isBookmarked;
     private Long parkingSpaceId;
     private String parkingName;
 

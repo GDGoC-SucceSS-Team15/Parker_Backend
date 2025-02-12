@@ -14,8 +14,6 @@ import com.si9nal.parker.user.domain.User;
 import com.si9nal.parker.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +28,6 @@ public class BookmarkService {
     private final SpaceBookmarkRepository spaceBookmarkRepository;
     private final ParkingSpaceRepository parkingSpaceRepository;
     private final UserRepository userRepository;
-    private static final Logger logger = LoggerFactory.getLogger(BookmarkService.class);
 
     public ViolationBookmarkResDto toggleViolationBookmark(String email, Long parkingViolationId) {
 
@@ -38,7 +35,7 @@ public class BookmarkService {
                 .orElseThrow(() -> new EntityNotFoundException("사용자 조회에 실패했습니다."));
 
         ParkingViolation parkingViolation = parkingViolationRepository.findById(parkingViolationId)
-                .orElseThrow(() -> new EntityNotFoundException("주정차 단속 구간이 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("주정차 단속 구간 조회에 실패했습니다."));
 
         Optional<ViolationBookmark> existingBookmark = violationBookmarkRepository.findByUserAndParkingViolation(user, parkingViolation);
 
