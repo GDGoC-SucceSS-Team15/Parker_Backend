@@ -29,7 +29,7 @@ public class BookmarkListService {
         } else if ("latest".equals(type)) {
             spaceBookmarks = spaceBookmarkRepository.findByUserOrderByCreatedAtDesc(user);
         } else {
-            spaceBookmarks = spaceBookmarkRepository.findByUser(user);
+            spaceBookmarks = spaceBookmarkRepository.findByUser(user); // 에러 추가 예정
         }
 
         return spaceBookmarks.stream()
