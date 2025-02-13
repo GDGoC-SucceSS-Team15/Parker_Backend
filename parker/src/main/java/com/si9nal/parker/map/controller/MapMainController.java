@@ -27,7 +27,7 @@ public class MapMainController {
 
     private final MapMainService mapMainService;
 
-    @Operation(summary = "주차공간과 단속카메라 위치들을 조회", description = "메인 지도에서 사용자의 위치 2km 안의 주차공간과 단속카메라의 위치를 불러옵니다. (임시로 구현한 기능)")
+    @Operation(summary = "주차공간과 단속카메라 위치들을 조회", description = "메인 지도에서 사용자의 위치 2km 안의 주차공간과 단속카메라의 위치를 불러옵니다. (확정기능)")
     @GetMapping("/v1/map-main")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getMapWithParkingSpacesAndCameraLocation(
             @Parameter(description = "사용자의 위도", example = "37.5665", required = true)
@@ -48,10 +48,12 @@ public class MapMainController {
             @RequestParam Double latitude,
             @Parameter(description = "사용자의 경도", example = "126.9780", required = true)
             @RequestParam Double longitude,
+            @Parameter(description = "시도 이름", example = "인천광역시", required = true)
+            @RequestParam String sidoName,
             @Parameter(description = "시군구 이름", example = "중구", required = true)
             @RequestParam String sigunguName){
 
-        Map<String, Object> nearbyData = mapMainService.findNearbyParkingSpacesAndNoStoppingZones(latitude, longitude, sigunguName);
+        Map<String, Object> nearbyData = mapMainService.findNearbyParkingSpacesAndNoStoppingZones(latitude, longitude, sidoName, sigunguName);
 
         return ResponseEntity.ok(
                 ApiResponse.of(SuccessStatus._OK, nearbyData));
@@ -74,7 +76,7 @@ public class MapMainController {
                 ApiResponse.of(SuccessStatus._OK, response));
     }
 
-    @Operation(summary = "근처 주차 공간의 정보 상세 조회", description = "근처 주차공간 중 하나의 상세한 정보를 조회합니다.")
+    @Operation(summary = "사용자의 현재 위치 근처 주차 공간의 정보 상세 조회", description = "사용자의 현재 위치 2km 이내 주차공간들 중 하나의 상세한 정보를 조회합니다.")
     @GetMapping("/parking-space/nearby/{id}")
     public ResponseEntity<ApiResponse<ParkingSpaceDetailResponse>> getNearbyParkingSpaceDetail(
             @Parameter(description = "조회할 주차 공간의 ID", example = "1", required = true)
@@ -86,7 +88,7 @@ public class MapMainController {
                 ApiResponse.of(SuccessStatus._OK, response));
     }
 
-    @Operation(summary = "사용자의 현재 위치 근처 주차공간들을 조회", description = "사용자의 현재 위치 2km 이내 주차공간들을 가까운 순으로 조회합니다.")
+    @Operation(summary = "사용자의 현재 위치 근처 주차공간 리스트 조회", description = "사용자의 현재 위치 2km 이내 주차공간들을 가까운 순으로 조회합니다.")
     @GetMapping("/parking-space/nearby")
     public ResponseEntity<ApiResponse<ParkingSpaceNearbyResponseList>> getNearbyParkingSpaces(
             @Parameter(description = "사용자의 위도", example = "37.5665", required = true)
