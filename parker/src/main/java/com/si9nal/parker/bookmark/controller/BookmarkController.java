@@ -43,12 +43,12 @@ public class BookmarkController {
 
     }
 
-    @GetMapping("/parking-space-list/{type}")
+    @GetMapping("/parking-space-list")
     public ResponseEntity<List<ParkingSpaceMapDto>> getParkingSpaceList (
             @AuthenticationPrincipal String email,
-            @PathVariable String type
+            @RequestParam(required = false, defaultValue = "latest") String sort
     ) {
-        List<ParkingSpaceMapDto> parkingSpaceListResponse = bookmarkListService.getParkingSpaceList(email, type);
+        List<ParkingSpaceMapDto> parkingSpaceListResponse = bookmarkListService.getParkingSpaceList(email, sort);
         return ResponseEntity.ok(parkingSpaceListResponse);
     }
 }
