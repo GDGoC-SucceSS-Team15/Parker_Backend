@@ -21,7 +21,7 @@ public class BookmarkController {
 
     @PostMapping("/parking-violation/{id}")
     public ResponseEntity<ViolationBookmarkResDto> toggleViolationBookmark(
-
+            
             @AuthenticationPrincipal String email,
             @PathVariable Long id
     ) {
@@ -43,11 +43,12 @@ public class BookmarkController {
 
     }
 
-    @GetMapping("/parking-space-list")
+    @GetMapping("/parking-space-list/{type}")
     public ResponseEntity<List<ParkingSpaceMapDto>> getParkingSpaceList (
-            @AuthenticationPrincipal String email
+            @AuthenticationPrincipal String email,
+            @PathVariable String type
     ) {
-        List<ParkingSpaceMapDto> parkingSpaceListResponse = bookmarkListService.getParkingSpaceList(email);
+        List<ParkingSpaceMapDto> parkingSpaceListResponse = bookmarkListService.getParkingSpaceList(email, type);
         return ResponseEntity.ok(parkingSpaceListResponse);
     }
 }

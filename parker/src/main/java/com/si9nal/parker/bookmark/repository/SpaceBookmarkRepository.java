@@ -16,4 +16,6 @@ public interface SpaceBookmarkRepository extends JpaRepository<SpaceBookmark, Lo
 
     Optional<SpaceBookmark> findByUserAndParkingSpace(User user, ParkingSpace parkingSpace);
     List<SpaceBookmark> findByUser(User user);
+    List<SpaceBookmark> findByUserOrderByCreatedAtAsc(User user);
+    List<SpaceBookmark> findByUserOrderByCreatedAtDesc(User user);
 }

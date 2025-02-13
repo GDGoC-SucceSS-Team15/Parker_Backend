@@ -18,14 +18,22 @@ public class BookmarkListService {
     private final SpaceBookmarkRepository spaceBookmarkRepository;
     private final UserRepository userRepository;
 
-    public List<ParkingSpaceMapDto> getParkingSpaceList(String email) {
+    public List<ParkingSpaceMapDto> getParkingSpaceList(String email, String type) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("사용자 조회에 실패했습니다."));
-        List<SpaceBookmark> spaceBookmarks = spaceBookmarkRepository.findByUser(user);
+
+        List<SpaceBookmark> spaceBookmarks;
+
+        if("earliest".equals(type)) {
+            spaceBookmarks = spaceBookmarkRepository.findByUserOrderByCreatedAtAsc(user);
+        } else if ("latest".equals(type)) {
+            spaceBookmarks = spaceBookmarkRepository.findByUserOrderByCreatedAtDesc(user);
+        } else {
+            spaceBookmarks = spaceBookmarkRepository.findByUser(user);
+        }
 
         return spaceBookmarks.stream()
                 .map(SpaceBookmark -> ParkingSpaceMapDto.fromEntity(SpaceBookmark.getParkingSpace()))
                 .collect(Collectors.toList());
-
     }
 }
