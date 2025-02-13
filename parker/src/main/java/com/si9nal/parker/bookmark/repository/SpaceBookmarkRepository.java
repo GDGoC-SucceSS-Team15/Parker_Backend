@@ -15,7 +15,6 @@ public interface SpaceBookmarkRepository extends JpaRepository<SpaceBookmark, Lo
     boolean existsByUserAndParkingSpace(User user, ParkingSpace parkingSpace);
 
     Optional<SpaceBookmark> findByUserAndParkingSpace(User user, ParkingSpace parkingSpace);
-    List<SpaceBookmark> findByUser(User user);
     List<SpaceBookmark> findByUserOrderByCreatedAtAsc(User user);
     List<SpaceBookmark> findByUserOrderByCreatedAtDesc(User user);
 }
