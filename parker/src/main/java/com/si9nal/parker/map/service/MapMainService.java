@@ -11,6 +11,7 @@ import com.si9nal.parker.global.common.util.GeometryUtil;
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
 import com.si9nal.parker.parkingspace.repository.ParkingSpaceRepository;
 import com.si9nal.parker.parkingviolation.repository.ParkingViolationRepository;
+import com.si9nal.parker.parkingviolation.util.SidoNameUtil;
 import com.si9nal.parker.user.domain.User;
 import com.si9nal.parker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -74,9 +75,10 @@ public class MapMainService {
     }
 
     /**
-     * 사용자 위치 2km 이내의 주차공간과 시군구 이름으로 주정차금지구역 불러오기
+     * 사용자 위치 2km 이내의 주차공간과 시도 이름 & 시군구 이름으로 주정차금지구역 불러오기
+     * 현재는 사용되지 않지만, 향후 사용될 수 있습니다. (메인 지도화면에서 주차공간 + CCTV 카메라 위치 조회로 기능변경)
      */
-    public Map<String, Object> findNearbyParkingSpacesAndNoStoppingZones(Double latitude, Double longitude, String sigunguName) {
+    public Map<String, Object> findNearbyParkingSpacesAndNoStoppingZones(Double latitude, Double longitude, String sidoName, String sigunguName) {
 
         validateCoordinates(latitude, longitude);
 
@@ -91,8 +93,12 @@ public class MapMainService {
                 .map(ParkingSpaceSimpleResponse::fromEntity)
                 .collect(Collectors.toList());
 
-        // 시군구이름으로 조회
-        List<ParkingViolationSimpleResponse> parkingViolations = parkingViolationRepository.findBySigunguName(sigunguName)
+        // 시도 이름이 최신화되지 않은 경우에 대해서 처리
+        String standardizedSidoName = SidoNameUtil.standardizeSidoName(sidoName);
+        List<String> sidoNames = SidoNameUtil.getPossibleSidoNames(standardizedSidoName);
+
+        // 시도 & 시군구이름으로 조회
+        List<ParkingViolationSimpleResponse> parkingViolations = parkingViolationRepository.findBySidoNamesAndSigunguName(sidoNames, sigunguName)
                 .stream()
                 .map(ParkingViolationSimpleResponse::fromEntity)
                 .collect(Collectors.toList());

@@ -1,10 +1,10 @@
 package com.si9nal.parker.parkingviolation.dto.res;
 
+import com.si9nal.parker.global.common.util.DtoFormatUtil;
 import com.si9nal.parker.parkingviolation.domain.ParkingViolation;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalTime;
 
 @Getter
 @Builder
@@ -15,12 +15,10 @@ public class ParkingViolationResDto {
     private String roadName;
     private String detailedLocation;
     private String managementPhoneNumber;
-    private LocalTime weekdayStartTime;
-    private LocalTime weekdayEndTime;
-    private LocalTime saturdayStartTime;
-    private LocalTime saturdayEndTime;
-    private LocalTime holidayStartTime;
-    private LocalTime holidayEndTime;
+
+    private String weekdayTime;
+    private String saturdayTime;
+    private String holidayTime;
 
     public static ParkingViolationResDto fromEntity(ParkingViolation parkingViolation) {
         return ParkingViolationResDto.builder()
@@ -30,12 +28,10 @@ public class ParkingViolationResDto {
                 .roadName(parkingViolation.getRoadName())
                 .detailedLocation(parkingViolation.getDetailedLocation())
                 .managementPhoneNumber(parkingViolation.getManagementPhoneNumber())
-                .weekdayStartTime(parkingViolation.getWeekdayStartTime())
-                .weekdayEndTime(parkingViolation.getWeekdayEndTime())
-                .saturdayStartTime(parkingViolation.getSaturdayStartTime())
-                .saturdayEndTime(parkingViolation.getSaturdayEndTime())
-                .holidayStartTime(parkingViolation.getHolidayStartTime())
-                .holidayEndTime(parkingViolation.getHolidayEndTime())
+
+                .weekdayTime(DtoFormatUtil.formatTimeRange(parkingViolation.getWeekdayStartTime(), parkingViolation.getWeekdayEndTime()))
+                .saturdayTime(DtoFormatUtil.formatTimeRange(parkingViolation.getSaturdayStartTime(), parkingViolation.getSaturdayEndTime()))
+                .holidayTime(DtoFormatUtil.formatTimeRange(parkingViolation.getHolidayStartTime(), parkingViolation.getHolidayEndTime()))
                 .build();
     }
 }
