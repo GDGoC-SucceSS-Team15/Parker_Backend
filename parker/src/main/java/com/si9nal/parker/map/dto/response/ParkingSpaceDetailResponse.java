@@ -1,12 +1,11 @@
 package com.si9nal.parker.map.dto.response;
 
+import com.si9nal.parker.global.common.util.DtoFormatUtil;
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
 
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * 현재 가까운 주차장 목록에서 주차장 하나를 조회하는 상세정보 DTO
@@ -38,37 +37,26 @@ public class ParkingSpaceDetailResponse {
     public static ParkingSpaceDetailResponse fromEntity(ParkingSpace parkingSpace) {
         return ParkingSpaceDetailResponse.builder()
                 .id(parkingSpace.getId())
-                .parkingName(getValueOrDefault(parkingSpace.getParkingName()))
+                .parkingName(DtoFormatUtil.getValueOrDefault(parkingSpace.getParkingName()))
 
                 .parkingUsage(parkingSpace.getParkingUsage() != null ? parkingSpace.getParkingUsage().getKorean() : "정보 없음")
                 .parkingType(parkingSpace.getParkingType() != null ? parkingSpace.getParkingType().getKorean() : "정보 없음")
-                .totalParkingSpaces(getValueOrDefault(parkingSpace.getTotalParkingSpaces()))
+                .totalParkingSpaces(DtoFormatUtil.getValueOrDefault(parkingSpace.getTotalParkingSpaces()))
 
-                .operatingDays(getValueOrDefault(parkingSpace.getOperatingDays()))
+                .operatingDays(DtoFormatUtil.getValueOrDefault(parkingSpace.getOperatingDays()))
 
-                .weekdayTime(formatTimeRange(parkingSpace.getWeekdayStartTime(), parkingSpace.getWeekdayEndTime()))
-                .saturdayTime(formatTimeRange(parkingSpace.getSaturdayStartTime(), parkingSpace.getSaturdayEndTime()))
-                .holidayTime(formatTimeRange(parkingSpace.getHolidayStartTime(), parkingSpace.getHolidayEndTime()))
+                .weekdayTime(DtoFormatUtil.formatTimeRange(parkingSpace.getWeekdayStartTime(), parkingSpace.getWeekdayEndTime()))
+                .saturdayTime(DtoFormatUtil.formatTimeRange(parkingSpace.getSaturdayStartTime(), parkingSpace.getSaturdayEndTime()))
+                .holidayTime(DtoFormatUtil.formatTimeRange(parkingSpace.getHolidayStartTime(), parkingSpace.getHolidayEndTime()))
 
-                .baseParkingTime(getValueOrDefault(parkingSpace.getBaseParkingTime()))
-                .baseParkingFee(getValueOrDefault(parkingSpace.getBaseParkingFee()))
-                .additionalUnitFee(getValueOrDefault(parkingSpace.getAdditionalUnitFee()))
+                .baseParkingTime(DtoFormatUtil.getValueOrDefault(parkingSpace.getBaseParkingTime()))
+                .baseParkingFee(DtoFormatUtil.getValueOrDefault(parkingSpace.getBaseParkingFee()))
+                .additionalUnitFee(DtoFormatUtil.getValueOrDefault(parkingSpace.getAdditionalUnitFee()))
 
-                .managingAgency(getValueOrDefault(parkingSpace.getManagingAgency()))
-                .phoneNumber(getValueOrDefault(parkingSpace.getPhoneNumber()))
+                .managingAgency(DtoFormatUtil.getValueOrDefault(parkingSpace.getManagingAgency()))
+                .phoneNumber(DtoFormatUtil.getValueOrDefault(parkingSpace.getPhoneNumber()))
                 .build();
     }
 
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-    private static String formatTimeRange(LocalTime startTime, LocalTime endTime) {
-        if (startTime == null || endTime == null) {
-            return "정보 없음";
-        }
-        return String.format("%s ~ %s", startTime.format(TIME_FORMATTER), endTime.format(TIME_FORMATTER));
-    }
-
-    private static String getValueOrDefault(Object value) {
-        return (value != null && !value.toString().isEmpty()) ? value.toString() : "정보 없음";
-    }
 }

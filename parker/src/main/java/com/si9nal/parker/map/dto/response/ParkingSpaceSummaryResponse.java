@@ -1,11 +1,9 @@
 package com.si9nal.parker.map.dto.response;
 
+import com.si9nal.parker.global.common.util.DtoFormatUtil;
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * 지도 메인 화면에서 주차장 하나를 조회했을 때 나오는 간략한 상세정보 DTO
@@ -33,31 +31,14 @@ public class ParkingSpaceSummaryResponse {
         return ParkingSpaceSummaryResponse.builder()
                 .id(parkingSpace.getId())
                 .parkingName(parkingSpace.getParkingName())
-                .weekdayTime(formatTimeRange(parkingSpace.getWeekdayStartTime(), parkingSpace.getWeekdayEndTime()))
-                .saturdayTime(formatTimeRange(parkingSpace.getSaturdayStartTime(), parkingSpace.getSaturdayEndTime()))
-                .holidayTime(formatTimeRange(parkingSpace.getHolidayStartTime(), parkingSpace.getHolidayEndTime()))
-                .baseParkingFee(parkingSpace.getBaseParkingFee() != null ? parkingSpace.getBaseParkingFee().toString() : "정보 없음")
+                .weekdayTime(DtoFormatUtil.formatTimeRange(parkingSpace.getWeekdayStartTime(), parkingSpace.getWeekdayEndTime()))
+                .saturdayTime(DtoFormatUtil.formatTimeRange(parkingSpace.getSaturdayStartTime(), parkingSpace.getSaturdayEndTime()))
+                .holidayTime(DtoFormatUtil.formatTimeRange(parkingSpace.getHolidayStartTime(), parkingSpace.getHolidayEndTime()))
+                .baseParkingFee(DtoFormatUtil.getValueOrDefault(parkingSpace.getBaseParkingFee()))
                 .latitude(parkingSpace.getLatitude())
                 .longitude(parkingSpace.getLongitude())
                 .isBookmarked(isBookmarked)
-                .distance(formatDistance(distance))
+                .distance(DtoFormatUtil.formatDistance(distance))
                 .build();
     }
-
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-
-    private static String formatTimeRange(LocalTime startTime, LocalTime endTime) {
-        if (startTime == null || endTime == null) {
-            return "정보 없음";
-        }
-        return String.format("%s ~ %s", startTime.format(TIME_FORMATTER), endTime.format(TIME_FORMATTER));
-    }
-
-    private static String formatDistance(Double distance) {
-        if (distance == null) {
-            return "정보 없음";
-        }
-        return String.format("%.1fkm", distance);
-    }
 }
-
