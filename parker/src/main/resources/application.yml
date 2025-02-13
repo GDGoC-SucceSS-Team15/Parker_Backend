@@ -36,7 +36,8 @@ cloud:
     s3:
       bucket: ${BUCKET_NAME}
       path:
-        report : reports
+        reports : reports
+        profile-images : profile-images
     region:
       static: ap-northeast-2
     stack:

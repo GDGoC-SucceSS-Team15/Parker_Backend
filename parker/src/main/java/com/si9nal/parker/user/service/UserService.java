@@ -1,5 +1,7 @@
 package com.si9nal.parker.user.service;
 
+import com.si9nal.parker.global.common.apiPayload.code.status.ErrorStatus;
+import com.si9nal.parker.global.common.apiPayload.exception.GeneralException;
 import com.si9nal.parker.global.common.security.TokenProvider;
 import com.si9nal.parker.user.domain.User;
 import com.si9nal.parker.user.dto.req.UserLoginReqDto;
@@ -30,10 +32,10 @@ public class UserService {
         this.redisTemplate = redisTemplate;
     }
 
-    public UserInfoResDto SingUp(UserSignupReqDto request) {
-
+    @Transactional
+    public UserInfoResDto signUp(UserSignupReqDto request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
+            throw new GeneralException(ErrorStatus.USER_ALREADY_EXISTS);
         }
 
         User user = request.toEntity();
@@ -44,13 +46,12 @@ public class UserService {
     }
 
     @Transactional
-    public TokenDto Login(UserLoginReqDto request){
-
+    public TokenDto login(UserLoginReqDto request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 틀립니다.");
+            throw new GeneralException(ErrorStatus.INVALID_PASSWORD);
         }
 
         String accessToken = tokenProvider.createAccessToken(user);
@@ -63,13 +64,11 @@ public class UserService {
     @Transactional
     public void logout(Principal principal, HttpServletRequest request) {
         if (principal == null) {
-            throw new IllegalStateException("인증된 사용자가 존재하지 않습니다.");
+            throw new GeneralException(ErrorStatus.USER_NOT_AUTHENTICATED);
         }
 
-        String email = principal.getName();
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
         String token = tokenProvider.resolveToken(request);
         long expirationTime = tokenProvider.getTokenExpiration(token);
@@ -79,13 +78,11 @@ public class UserService {
     @Transactional
     public void deleteUser(Principal principal, HttpServletRequest request) {
         if (principal == null) {
-            throw new IllegalStateException("인증된 사용자가 존재하지 않습니다.");
+            throw new GeneralException(ErrorStatus.USER_NOT_AUTHENTICATED);
         }
 
-        String email = principal.getName();
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
         String token = tokenProvider.resolveToken(request);
         redisTemplate.delete(token);

@@ -29,9 +29,11 @@ public class AmazonConfig {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.path.report}")
+    @Value("${cloud.aws.s3.path.reports}")
     private String reportPath;
 
+    @Value("${cloud.aws.s3.path.profile-images}")
+    private String profileImagesPath;
 
 
     @PostConstruct

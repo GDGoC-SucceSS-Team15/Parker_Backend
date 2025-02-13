@@ -84,6 +84,9 @@ public class ReportPostService {
             throw new GeneralException(ErrorStatus.REPORT_ALREADY_PROCESSED);
         }
 
+        if (report.getImageUrl() != null) {
+            s3Manager.deleteFile(report.getImageUrl());
+        }
         reportRepository.delete(report);
     }
 
