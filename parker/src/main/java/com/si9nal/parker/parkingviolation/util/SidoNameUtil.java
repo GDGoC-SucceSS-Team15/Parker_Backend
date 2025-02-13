@@ -1,14 +1,11 @@
 package com.si9nal.parker.parkingviolation.util;
 
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class SidoNameUtil {
-
-    private SidoNameUtil(){
-
-    }
 
     public static String standardizeSidoName(String sidoName) {
         if ("강원특별자치도".equals(sidoName)) {
