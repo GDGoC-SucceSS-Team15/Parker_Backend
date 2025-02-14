@@ -24,7 +24,7 @@ public class CameraLocationController {
 
     private final CameraLocationService cameraLocationService;
 
-    @Operation(summary = "단속 카메라 위치 조회", description = "메인 지도에서 사용자의 위치 2km 안의 단속카메라의 위치를 불러옵니다.")
+    @Operation(summary = "단속 카메라 위치 조회", description = "메인 지도에서 사용자의 위치 500m 안의 단속카메라의 위치를 불러옵니다.")
     @GetMapping("/camera-location-map")
     public ResponseEntity<ApiResponse<List<CameraLocationResponse>>> getMapWithCameraLocation (
             @Parameter(description = "사용자의 위도", example = "37.5358", required = true)

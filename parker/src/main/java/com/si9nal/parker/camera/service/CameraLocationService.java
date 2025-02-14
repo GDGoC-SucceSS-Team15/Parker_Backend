@@ -23,9 +23,6 @@ public class CameraLocationService {
 
         validateCoordinates(latitude, longitude);
 
-        Location northEast = GeometryUtil.calculate(latitude, longitude, 2.0, Direction.NORTHEAST.getBearing());
-        Location southWest = GeometryUtil.calculate(latitude, longitude, 2.0, Direction.SOUTHWEST.getBearing());
-
         Location camera_northEast = GeometryUtil.calculate(latitude, longitude, 0.5, Direction.NORTHEAST.getBearing());
         Location camera_southWest = GeometryUtil.calculate(latitude, longitude, 0.5, Direction.SOUTHWEST.getBearing());
 
