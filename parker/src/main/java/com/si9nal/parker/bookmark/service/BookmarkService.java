@@ -6,6 +6,8 @@ import com.si9nal.parker.bookmark.dto.res.SpaceBookmarkResDto;
 import com.si9nal.parker.bookmark.dto.res.ViolationBookmarkResDto;
 import com.si9nal.parker.bookmark.repository.SpaceBookmarkRepository;
 import com.si9nal.parker.bookmark.repository.ViolationBookmarkRepository;
+import com.si9nal.parker.global.common.apiPayload.code.status.ErrorStatus;
+import com.si9nal.parker.global.common.apiPayload.exception.GeneralException;
 import com.si9nal.parker.parkingspace.domain.ParkingSpace;
 import com.si9nal.parker.parkingspace.repository.ParkingSpaceRepository;
 import com.si9nal.parker.parkingviolation.domain.ParkingViolation;
@@ -32,10 +34,10 @@ public class BookmarkService {
     public ViolationBookmarkResDto toggleViolationBookmark(String email, Long parkingViolationId) {
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("사용자 조회에 실패했습니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_AUTHENTICATED));
 
         ParkingViolation parkingViolation = parkingViolationRepository.findById(parkingViolationId)
-                .orElseThrow(() -> new EntityNotFoundException("주정차 단속 구간 조회에 실패했습니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_VIOLATION_NOT_FOUND));
 
         Optional<ViolationBookmark> existingBookmark = violationBookmarkRepository.findByUserAndParkingViolation(user, parkingViolation);
 
@@ -56,10 +58,10 @@ public class BookmarkService {
     public SpaceBookmarkResDto toggleSpaceBookmark(String email, Long parkingSpaceId) {
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("사용자 조회에 실패했습니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
         ParkingSpace parkingSpace = parkingSpaceRepository.findById(parkingSpaceId)
-                .orElseThrow(() -> new EntityNotFoundException("주차장 조회에 실패했습니다."));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARKING_SPACE_NOT_FOUND));
 
         Optional<SpaceBookmark> existingBookmark = spaceBookmarkRepository.findByUserAndParkingSpace(user, parkingSpace);
 
