@@ -161,3 +161,4 @@ bin/
 
 ### Custom ###
 HELP.md
+.env
