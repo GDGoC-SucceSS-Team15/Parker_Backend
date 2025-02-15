@@ -38,7 +38,12 @@ public enum ErrorStatus implements BaseErrorCode {
     REPORT_INVALID_STATUS(HttpStatus.BAD_REQUEST, "REPORT4004", "유효하지 않은 신고 상태입니다."),
 
     // 불법주정차 관련 에러
-    PARKING_VIOLATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VIOLATION4001", "해당 위치의 불법 주정차 정보가 없습니다.");
+    PARKING_VIOLATION_NOT_FOUND(HttpStatus.NOT_FOUND, "VIOLATION4001", "해당 위치의 불법 주정차 정보가 없습니다."),
+
+    //단속 카메라 관련 에러
+    CAMERA_LOCATION_INVALID_LATITUDE(HttpStatus.BAD_REQUEST, "CAMERA4001", "유효하지 않은 위도 값입니다. -90에서 90 사이의 값이어야 합니다."),
+    CAMERA_LOCATION_INVALID_LONGITUDE(HttpStatus.BAD_REQUEST, "CAMERA4002", "유효하지 않은 경도 값입니다. -180에서 180 사이의 값이어야 합니다."),
+    CAMERA_LOCATION_NOT_FOUND(HttpStatus.NOT_FOUND, "CAMERA4003", "주변에 단속카메라를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
