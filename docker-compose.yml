@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     container_name: parker-app
-    image: parker-backend:latest  # GitHub Actions에서 빌드된 이미지 사용
+    image: parker-backend:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -27,8 +27,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
