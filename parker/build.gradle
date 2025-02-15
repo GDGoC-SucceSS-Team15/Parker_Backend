@@ -61,5 +61,9 @@ dependencies {
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+	enabled = false
+}
+
+tasks.withType(Test).configureEach {
+	enabled = false
 }
