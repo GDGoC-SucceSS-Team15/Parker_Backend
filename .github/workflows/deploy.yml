@@ -13,16 +13,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
 
-      - name: Deploy to EC2
+      - name: Deploy to EC2 via SSM
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-            cd /home/ec2-user/parker
-            git pull origin deploy/#47/aws-ec2-docker
-            docker-compose down
-            docker-compose up -d --build
-          EOF
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --targets "Key=instance-id,Values=${{ secrets.EC2_INSTANCE_ID }}" \
+            --parameters 'commands=["cd /home/ec2-user/parker", "git pull origin deploy/#47/aws-ec2-docker", "docker-compose down", "docker-compose up -d --build"]' \
+            --region ap-northeast-2
