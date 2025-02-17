@@ -24,6 +24,6 @@ jobs:
         run: |
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
-            --targets "Key=instance-id,Values=${{ secrets.EC2_INSTANCE_ID }}" \
+            --targets "Key=instanceids,Values=${{ secrets.EC2_INSTANCE_ID }}" \ 
             --parameters 'commands=["cd /home/ec2-user/parker", "git pull origin deploy/#47/aws-ec2-docker", "docker-compose down", "docker-compose up -d --build"]' \
             --region ap-northeast-2
