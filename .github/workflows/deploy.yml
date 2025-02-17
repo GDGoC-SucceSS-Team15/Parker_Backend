@@ -3,7 +3,7 @@ name: Deploy to AWS EC2
 on:
   push:
     branches:
-      - deploy/#47/aws-ec2-docker
+      - main
 
 jobs:
   deploy:
@@ -24,6 +24,6 @@ jobs:
         run: |
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
-            --targets Key=instanceIds,Values=${{ secrets.EC2_INSTANCE_ID }} \
-            --parameters 'commands=["cd /home/ubuntu/parker", "git pull origin deploy/#47/aws-ec2-docker", "docker-compose down", "docker-compose up -d --build"]' \
+            --targets '[{"Key":"InstanceIds","Values":["${{ secrets.EC2_INSTANCE_ID }}"]}]' \
+            --parameters '{"commands":["cd /home/ubuntu/parker", "git pull origin main", "docker-compose down", "docker-compose up -d --build"]}' \
             --region ap-northeast-2
