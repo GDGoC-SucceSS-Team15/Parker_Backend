@@ -34,8 +34,15 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/user/signup", "/api/user/login", "/v3/api-docs/**",
-                                "/swagger-ui/**").permitAll()
+                        .requestMatchers(
+                                "/api/user/signup",
+                                "/api/user/login",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
 
                         .anyRequest().authenticated()
                 )
@@ -51,7 +58,12 @@ public class WebSecurityConfig {
         configuration.setAllowedOriginPatterns(List.of("http://localhost:3000", "https://parker-sss15.shop"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of("Access-Control-Allow-Credentials", "Authorization", "Content-Type"));
+        configuration.setExposedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "Access-Control-Allow-Origin",
+                "Access-Control-Allow-Credentials"
+        ));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
