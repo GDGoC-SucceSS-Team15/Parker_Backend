@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      APPLICATION_PROD: ${{ secrets.APPLICATION_PROD }}
+      APPLICATION: ${{ secrets.APPLICATION }}
 
     permissions:
       contents: read
@@ -27,12 +27,12 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      # application-prod.yml 설정 파일을 생성
+      # application.yml 설정 파일을 생성
       - name: Create application.yml
         run: |
           cd parker  # 'parker' 디렉토리로 이동
           mkdir -p ./src/main/resources/
-          echo ${{ env.APPLICATION_PROD }} | base64 --decode > ./src/main/resources/application-prod.yml
+          echo ${{ env.APPLICATION }} | base64 --decode > ./src/main/resources/application.yml
 
       # Gradle 실행 권한 부여
       - name: Grant execute permission to gradlew
@@ -58,7 +58,7 @@ jobs:
         run: docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest .
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:prod
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
 
   deploy:
     needs: build  # build Job 완료 후 실행
@@ -95,7 +95,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}  # GitHub Secrets에서 EC2 SSH Key 불러오기
           script_stop: true
           script: |
-            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:prod
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
             sudo docker-compose -f docker-compose.yml up -d ${{ env.TARGET_UPSTREAM }}
 
       # 배포한 컨테이너가 정상적으로 작동하는지 Health Check 수행
