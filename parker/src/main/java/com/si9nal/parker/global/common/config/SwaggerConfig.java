@@ -43,4 +43,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/api/user/signup", "/api/user/login", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi allApi() {
+        return GroupedOpenApi.builder()
+                .group("all")
+                .pathsToMatch("/**")
+                .build();
+    }
 }
