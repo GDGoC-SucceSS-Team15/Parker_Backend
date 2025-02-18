@@ -93,7 +93,6 @@ jobs:
           username: ubuntu
           host: ${{ secrets.SERVER_DOMAIN }}  # EC2 도메인
           key: ${{ secrets.EC2_SSH_KEY }}  # GitHub Secrets에서 EC2 SSH Key 불러오기
-          script_stop: true
           script: |
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
             sudo docker-compose -f docker-compose.yml up -d ${{ env.TARGET_UPSTREAM }}
