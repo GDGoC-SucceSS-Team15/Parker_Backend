@@ -46,10 +46,6 @@ jobs:
           cd parker  # 'parker' 디렉토리로 이동
           ./gradlew clean build -x test
 
-      # Spring Boot 애플리케이션 빌드 (테스트 제외)
-      - name: Build with Gradle
-        run: ./gradlew clean build -x test
-
       # Docker Hub 로그인
       - name: Login to DockerHub
         uses: docker/login-action@v2
