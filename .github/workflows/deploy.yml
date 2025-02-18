@@ -86,13 +86,19 @@ jobs:
             echo "TARGET_UPSTREAM=blue" >> $GITHUB_ENV
           fi
 
+      # SSH 키를 Base64 디코딩하여 파일로 저장
+      - name: Decode SSH Private Key
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > key.pem
+          chmod 600 key.pem  # 권한 설정
+
       # EC2에 SSH 접속하여 새로운 Docker 컨테이너 배포
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@master
         with:
           username: ubuntu
           host: ${{ secrets.SERVER_DOMAIN }}  # EC2 도메인
-          key: ${{ secrets.EC2_SSH_KEY }}  # GitHub Secrets에서 EC2 SSH Key 불러오기
+          key_path: ./key.pem  # GitHub Secrets에서 EC2 SSH Key를 디코딩하여 저장한 파일 경로
           script: |
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
             sudo docker-compose -f docker-compose.yml up -d ${{ env.TARGET_UPSTREAM }}
@@ -111,7 +117,7 @@ jobs:
         with:
           username: ubuntu
           host: ${{ secrets.SERVER_DOMAIN }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key_path: ./key.pem  # Base64로 디코딩된 key.pem 파일을 사용
           script_stop: true
           script: |
             sudo docker exec -i nginxserver bash -c 'echo "set \$service_url ${{ env.TARGET_UPSTREAM }};" > /etc/nginx/conf.d/service-env.inc && nginx -s reload'
@@ -122,7 +128,7 @@ jobs:
         with:
           username: ubuntu
           host: ${{ secrets.SERVER_DOMAIN }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key_path: ./key.pem  # Base64로 디코딩된 key.pem 파일을 사용
           script_stop: true
           script: |
             sudo docker stop ${{ env.CURRENT_UPSTREAM }}
