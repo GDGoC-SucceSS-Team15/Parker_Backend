@@ -100,6 +100,7 @@ jobs:
           host: ${{ secrets.SERVER_DOMAIN }}  # EC2 도메인
           key_path: ./key.pem  # GitHub Secrets에서 EC2 SSH Key를 디코딩하여 저장한 파일 경로
           script: |
+            cd /home/ubuntu/parker
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
             sudo docker-compose -f docker-compose.yml up -d ${{ env.TARGET_UPSTREAM }}
 
