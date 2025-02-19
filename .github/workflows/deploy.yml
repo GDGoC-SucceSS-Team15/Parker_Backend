@@ -82,33 +82,30 @@ jobs:
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
             sudo docker-compose -f docker-compose.yml up -d
 
-      # 배포한 컨테이너가 정상적으로 작동하는지 Health Check 수행
+      # nginx 설정 테스트
+      - name: Test nginx configuration
+        uses: appleboy/ssh-action@master
+        with:
+          username: ubuntu
+          host: ${{ secrets.SERVER_DOMAIN }}
+          key_path: ./key.pem  # Base64로 디코딩된 key.pem 파일을 사용
+          script: |
+            sudo nginx -t  # nginx 설정 파일 테스트
+
+      # nginx 설정 재적용
+      - name: Reload nginx configuration
+        uses: appleboy/ssh-action@master
+        with:
+          username: ubuntu
+          host: ${{ secrets.SERVER_DOMAIN }}
+          key_path: ./key.pem  # Base64로 디코딩된 key.pem 파일을 사용
+          script: |
+            sudo systemctl reload nginx  # nginx 설정 적용
+
+      # Health Check
       - name: Health Check
         uses: jtalk/url-health-check-action@v4
         with:
           url: https://${{ secrets.SERVER_DOMAIN }}/health-check
           max-attempts: 5  # 최대 5번까지 확인
           retry-delay: 10s  # 10초 간격으로 재시도
-
-      # Nginx의 Upstream을 새 컨테이너로 변경 (트래픽 이동)
-      - name: Update Nginx Upstream
-        uses: appleboy/ssh-action@master
-        with:
-          username: ubuntu
-          host: ${{ secrets.SERVER_DOMAIN }}
-          key_path: ./key.pem  # Base64로 디코딩된 key.pem 파일을 사용
-          script_stop: true
-          script: |
-            sudo docker exec -i nginxserver bash -c 'echo "set \$service_url ${TARGET_UPSTREAM};" > /etc/nginx/conf.d/service-env.inc && nginx -s reload'
-
-      # 이전 컨테이너 종료 및 정리
-      - name: Stop Previous Container
-        uses: appleboy/ssh-action@master
-        with:
-          username: ubuntu
-          host: ${{ secrets.SERVER_DOMAIN }}
-          key_path: ./key.pem  # Base64로 디코딩된 key.pem 파일을 사용
-          script_stop: true
-          script: |
-            sudo docker stop ${{ env.CURRENT_UPSTREAM }}
-            sudo docker rm ${{ env.CURRENT_UPSTREAM }}
