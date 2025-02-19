@@ -86,7 +86,7 @@ jobs:
       - name: Health Check
         uses: jtalk/url-health-check-action@v4
         with:
-          url: https://${{ secrets.SERVER_DOMAIN }}:${{ env.STOPPED_PORT }}/health-check
+          url: https://${{ secrets.SERVER_DOMAIN }}/health-check
           max-attempts: 5  # 최대 5번까지 확인
           retry-delay: 10s  # 10초 간격으로 재시도
 
