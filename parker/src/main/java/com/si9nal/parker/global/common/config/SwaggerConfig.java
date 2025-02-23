@@ -30,7 +30,7 @@ public class SwaggerConfig {
                         .bearerFormat("JWT"));
 
         return new OpenAPI()
-                .addServersItem(new Server().url("https://parker-sss15.store"))
+                .addServersItem(new Server().url("https://parker-si9nal.shop"))
                 .info(info)
                 .addSecurityItem(securityRequirement)
                 .components(components);
