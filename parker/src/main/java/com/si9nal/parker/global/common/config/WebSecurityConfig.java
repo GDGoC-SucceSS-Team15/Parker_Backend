@@ -61,7 +61,8 @@ public class WebSecurityConfig {
                 "https://parker-sss15.store",
                 "https://localhost:3000",
                 "https://parker-sss15.shop",
-                "https://parker-si9nal.shop"));
+                "https://parker-si9nal.shop",
+                "https://www.parker-sss15.site"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of(
